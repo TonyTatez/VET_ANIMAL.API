@@ -27,7 +27,8 @@ namespace ProyectoBaseNetCore.Services
                 idCliente = x.IdCliente,
                 direccion = x.Direccion,
                 telefono = x.Telefono,
-                //Apellidos = x.Codigo,
+                correo= x.Correo,
+                codigo = x.Codigo,
             }).ToListAsync();
 
 
@@ -42,33 +43,6 @@ namespace ProyectoBaseNetCore.Services
                 telefono = x.Telefono,
             }).FirstOrDefaultAsync();
 
-        //public async Task<bool> SaveCliente(GuardarClienteViewModel Cliente)
-        //{
-        //    var ClienteEncontrada = await _context.Cliente.FirstOrDefaultAsync(x => x.Activo && (x.IdCliente == Cliente.idCliente || x.Nombres == Cliente.nombres));
-        //    if (ClienteEncontrada == null)
-        //    {
-        //        Cliente NewCiudad = new Cliente();
-        //        Cliente.idCliente = Cliente.idCliente;
-        //        Cliente.identificacion = Cliente.identificacion;
-        //        Cliente. = true;
-        //        Cliente.FechaRegistro = DateTime.Now;
-        //        Cliente.UsuarioRegistro = _usuario;
-        //        Cliente.IpRegistro = _ip;
-        //        Cliente.SistemaRegistro = "Mantenimiento WEB";
-        //        await _context.Cliente.AddAsync(NewCiudad);
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    else
-        //    {
-        //        CiudadEncontrada.Nombre = Ciudad.descripcionCiudad;
-        //        CiudadEncontrada.FechaModificacion = DateTime.Now;
-        //        CiudadEncontrada.UsuarioModificacion = _usuario;
-        //        CiudadEncontrada.IpModificacion = _ip;
-        //        CiudadEncontrada.SistemaModificacion = "Mantenimiento WEB";
-        //        await context.SaveChangesAsync();
-        //    }
-        //    return true;
-        //}
         public async Task<bool> SaveCliente(GuardarClienteViewModel Cliente)
         {
             var ClienteEncontrada = await _context.Cliente.FirstOrDefaultAsync(x => x.Activo && (x.IdCliente == Cliente.idCliente || x.Nombres == Cliente.nombres));
@@ -101,50 +75,6 @@ namespace ProyectoBaseNetCore.Services
             }
             return true;
         }
-
-        //public Task<List<GuardarClienteViewModel>> GuardarCliente(GuardarClienteViewModel guardar)
-        //{
-
-        //    try
-        //    {
-        //        Cliente ClienteEncontrada = await _context.Cliente.Where(x => x.Identificacion == Cliente.Identificacion.Trim()).FirstOrDefaultAsync();
-        //        if (ClienteEncontrada == null)
-        //        {
-        //            Cliente NewCliente = new Cliente();
-        //            NewCliente.Identificacion = Cliente.Identificacion;
-        //            NewCliente.Nombres = Cliente.Nombres;
-        //            NewCliente.IdCliente = Cliente.IdCliente;
-        //            NewCliente.Codigo = Cliente.Apellidos;
-        //            NewCliente.Direccion = Cliente.Direccion;
-        //            NewCliente.Telefono = Cliente.Telefono;
-        //            NewCliente.FechaRegistro = DateTime.Now;
-        //            NewCliente.UsuarioRegistro = _usuario;
-        //            NewCliente.IpRegistro = _ip;
-        //            await _context.Cliente.AddAsync(NewCliente);
-        //            await _context.SaveChangesAsync();
-        //            return true;
-        //        }
-        //        else
-        //        {
-        //            ClienteEncontrada.Nombres = Cliente.Nombres;
-        //            ClienteEncontrada.Codigo = Cliente.Apellidos;
-        //            ClienteEncontrada.Direccion = Cliente.Direccion;
-        //            ClienteEncontrada.Telefono = Cliente.Telefono;
-        //            ClienteEncontrada.FechaModificacion = DateTime.Now;
-        //            ClienteEncontrada.UsuarioModificacion = _usuario;
-        //            ClienteEncontrada.IpModificacion = _ip;
-        //            await _context.SaveChangesAsync();
-        //            return true;
-        //        }
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw;
-        //    }
-        //}
-
-
 
         public async Task<bool> DeleteCliente(long IdCliente)
         {

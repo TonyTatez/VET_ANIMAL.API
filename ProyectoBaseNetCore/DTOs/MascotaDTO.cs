@@ -3,6 +3,7 @@
     public class MascotaDTO
     {
         public long IdMascota { get; set; }
+        public string CODMascota { get; set; }
         public string NombreMascota { get; set; }
         public string Raza { get; set; }
         public string Cliente { get; set; }

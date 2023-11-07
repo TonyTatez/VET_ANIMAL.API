@@ -9,6 +9,7 @@ namespace ProyectoBaseNetCore.DTOs
         public string nombres { get; set; }
         public string telefono { get; set; }
         public string correo { get; set; }
+        public string codigo { get; set; }
         [MaxLength(350)]
         public string direccion { get; set; }
     }
