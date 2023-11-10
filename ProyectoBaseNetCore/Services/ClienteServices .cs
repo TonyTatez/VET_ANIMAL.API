@@ -77,17 +77,34 @@ namespace ProyectoBaseNetCore.Services
         }
         public async Task<bool> EditCliente(ClienteDTO Cliente)
         {
+            // Buscar el cliente por ID
             var ClienteEncontrado = await _context.Cliente.FindAsync(Cliente.idCliente);
-            ClienteEncontrado.Nombres = Cliente.nombres;
-            ClienteEncontrado.Identificacion = Cliente.identificacion;
-            ClienteEncontrado.Direccion = Cliente.direccion;
-            ClienteEncontrado.Correo = Cliente.correo;
-            ClienteEncontrado.Telefono = Cliente.telefono;
-            ClienteEncontrado.FechaModificacion = DateTime.Now;
-            ClienteEncontrado.UsuarioModificacion = _usuario;
-            ClienteEncontrado.IpModificacion = _ip;
-            await _context.SaveChangesAsync();
-            return true;
+
+            // Verificar si se encontró el cliente
+            if (ClienteEncontrado != null)
+            {
+                // Actualizar las propiedades del cliente encontrado
+                ClienteEncontrado.Nombres = Cliente.nombres;
+                ClienteEncontrado.Identificacion = Cliente.identificacion;
+                ClienteEncontrado.Direccion = Cliente.direccion;
+                ClienteEncontrado.Correo = Cliente.correo;
+                ClienteEncontrado.Telefono = Cliente.telefono;
+                ClienteEncontrado.FechaModificacion = DateTime.Now;
+                ClienteEncontrado.UsuarioModificacion = _usuario;
+                ClienteEncontrado.IpModificacion = _ip;
+
+                // Guardar los cambios en la base de datos
+                await _context.SaveChangesAsync();
+
+                // Indicar que la edición fue exitosa
+                return true;
+            }
+            else
+            {
+                // El cliente no fue encontrado, puedes manejar esto según tus necesidades
+                // En este caso, devuelvo false para indicar que la edición no fue exitosa
+                return false;
+            }
         }
         public async Task<bool> DeleteCliente(long IdCliente)
         {
