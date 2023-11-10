@@ -75,7 +75,20 @@ namespace ProyectoBaseNetCore.Services
             }
             return true;
         }
-
+        public async Task<bool> EditCliente(ClienteDTO Cliente)
+        {
+            var ClienteEncontrado = await _context.Cliente.FindAsync(Cliente.idCliente);
+            ClienteEncontrado.Nombres = Cliente.nombres;
+            ClienteEncontrado.Identificacion = Cliente.identificacion;
+            ClienteEncontrado.Direccion = Cliente.direccion;
+            ClienteEncontrado.Correo = Cliente.correo;
+            ClienteEncontrado.Telefono = Cliente.telefono;
+            ClienteEncontrado.FechaModificacion = DateTime.Now;
+            ClienteEncontrado.UsuarioModificacion = _usuario;
+            ClienteEncontrado.IpModificacion = _ip;
+            await _context.SaveChangesAsync();
+            return true;
+        }
         public async Task<bool> DeleteCliente(long IdCliente)
         {
             try
