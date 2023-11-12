@@ -29,6 +29,7 @@ namespace ProyectoBaseNetCore.Services
                 Cliente = x.Cliente.Nombres,
                 Raza = x.Raza,
                 Sexo = x.Sexo,
+                Peso = x.Peso,
                 CODMascota = x.Codigo,
                 FechaNacimiento = x.FechaNacimiento,
             }).ToListAsync();
@@ -103,6 +104,7 @@ namespace ProyectoBaseNetCore.Services
                 CurrentPet.Codigo = Data.CODMascota;
                 CurrentPet.IdCliente = Data.IdCliente;
                 CurrentPet.Raza = Data.Raza;
+                CurrentPet.Peso = Data.Peso;
                 CurrentPet.FechaNacimiento = Data.FechaNacimiento;
                 CurrentPet.Sexo = Data.Sexo;
                 CurrentPet.Activo = true;
@@ -120,11 +122,11 @@ namespace ProyectoBaseNetCore.Services
             }
         }
 
-        public async Task<bool> DeleteMascota(long IdCliente)
+        public async Task<bool> DeleteMascota(long IdMascota)
         {
             try
             {
-                var CurrentPet = await _context.Mascota.FindAsync(IdCliente);
+                var CurrentPet = await _context.Mascota.FindAsync(IdMascota);
                 if (CurrentPet != null)
                 {
                     CurrentPet.Activo = false;

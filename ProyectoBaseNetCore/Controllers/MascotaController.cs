@@ -46,6 +46,6 @@ namespace ProyectoBaseNetCore.Controllers
         public async Task<IActionResult> EditMascota(MascotaDTO Data) => Ok(await _service.EdirtMascotaAsync(Data));
 
         [HttpDelete("Mascota")]
-        public async Task<IActionResult> EliminaMascota(long IdCliente) => Ok(await _service.DeleteMascota(IdCliente));
+        public async Task<IActionResult> EliminaMascota(long IdMascota) => Ok(await _service.DeleteMascota(IdMascota));
     }
 }
