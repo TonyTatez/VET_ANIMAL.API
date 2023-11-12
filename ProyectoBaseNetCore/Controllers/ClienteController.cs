@@ -10,7 +10,7 @@ using ProyectoBaseNetCore.Services;
 namespace ProyectoBaseNetCore.Controllers
 {
     [ApiController]
-    [Route("api/Cliente")]
+    [Route("api/cat")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ClienteController : Controller
     {
@@ -37,16 +37,17 @@ namespace ProyectoBaseNetCore.Controllers
             this._service = new ClienteService(_context,configuration, userName, ip);
         }
 
-        [HttpGet("ListarClientes")]
+        [HttpGet("Cliente")]
         public async Task<IActionResult> GetCliente() =>Ok(await _service.GetCliente());
-        [HttpPut("EditarCliente")]
+        [HttpPut("Cliente")]
         public async Task<IActionResult> GetCliente(ClienteDTO Cliente) => Ok(await _service.EditCliente(Cliente));
 
-        [HttpPost("NuevoCliente")]
+        [HttpPost("Cliente")]
         public async Task<IActionResult> NuevoCliente(GuardarClienteViewModel Cliente) =>Ok(await _service.SaveCliente(Cliente));
           
 
-        [HttpDelete("EliminaCliente")]
+        [HttpDelete("Cliente")]
         public async Task<IActionResult> EliminaCliente(long IdCliente) => Ok(await _service.DeleteCliente(IdCliente));
+        
     }
 }

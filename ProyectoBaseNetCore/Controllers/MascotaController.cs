@@ -9,7 +9,7 @@ using ProyectoBaseNetCore.Services;
 namespace ProyectoBaseNetCore.Controllers
 {
     [ApiController]
-    [Route("api/Mascota/")]
+    [Route("api/cat/")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class MascotaController : Controller
     {
@@ -36,13 +36,15 @@ namespace ProyectoBaseNetCore.Controllers
             this._service = new MascotaServices(_context,configuration, userName, ip);
         }
 
-        [HttpGet("Listar")]
+        [HttpGet("Mascotas")]
         public async Task<IActionResult> GetMascota() =>Ok(await _service.GetAllMascotasAsync());
 
-        [HttpPost("Crear")]
+        [HttpPost("Mascotas")]
         public async Task<IActionResult> NuevaMascota(MascotaDTO Data) =>Ok(await _service.SaveMascota(Data));
-          
-        [HttpDelete("Eliminar")]
+        [HttpPut("Mascotas")]
+        public async Task<IActionResult> EditMascota(MascotaDTO Data) => Ok(await _service.EdirtMascotaAsync(Data));
+
+        [HttpDelete("Mascotas")]
         public async Task<IActionResult> EliminaMascota(long IdCliente) => Ok(await _service.DeleteMascota(IdCliente));
     }
 }
