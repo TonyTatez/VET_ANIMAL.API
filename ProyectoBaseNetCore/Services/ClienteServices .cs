@@ -31,16 +31,16 @@ namespace ProyectoBaseNetCore.Services
                 codigo = x.Codigo,
             }).ToListAsync();
 
-
-        public async Task<ClienteDTO> GetIdCliente(string Ruc) => await _context.Cliente
-            .Where(x => x.Activo && x.Identificacion == Ruc).Select(x => new ClienteDTO
+        public async Task<ClienteDTO> GetClientByCI(string CI) => await _context.Cliente
+            .Where(x => x.Activo && x.Identificacion == CI).Select(x => new ClienteDTO
             {
                 idCliente = x.IdCliente,
                 identificacion = x.Identificacion,
                 nombres = x.Nombres,
-                //Apellidos = x.Codigo,
+                codigo= x.Codigo,
                 direccion = x.Direccion,
                 telefono = x.Telefono,
+                correo= x.Correo,
             }).FirstOrDefaultAsync();
 
         public async Task<bool> SaveCliente(GuardarClienteViewModel Cliente)

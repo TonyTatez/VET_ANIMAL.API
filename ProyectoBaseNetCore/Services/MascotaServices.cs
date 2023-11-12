@@ -34,7 +34,7 @@ namespace ProyectoBaseNetCore.Services
             }).ToListAsync();
 
 
-        public async Task<MascotaDTO> GetIdMascota(long IdMascota) => await _context.Mascota.Where(x => x.Activo && x.IdMascota == IdMascota).Select(x => new MascotaDTO
+        public async Task<MascotaDTO> GetMascotaById(long IdMascota) => await _context.Mascota.Where(x => x.Activo && x.IdMascota == IdMascota).Select(x => new MascotaDTO
         {
             IdMascota = x.IdMascota,
             NombreMascota = x.NombreMascota,

@@ -37,8 +37,11 @@ namespace ProyectoBaseNetCore.Controllers
             this._service = new ClienteService(_context,configuration, userName, ip);
         }
 
+        [HttpGet("Clientes")]
+        public async Task<IActionResult> GetClientes() =>Ok(await _service.GetCliente());
+
         [HttpGet("Cliente")]
-        public async Task<IActionResult> GetCliente() =>Ok(await _service.GetCliente());
+        public async Task<IActionResult> GetCliente([FromQuery] string CI) => Ok(await _service.GetClientByCI(CI));
         [HttpPut("Cliente")]
         public async Task<IActionResult> GetCliente(ClienteDTO Cliente) => Ok(await _service.EditCliente(Cliente));
 

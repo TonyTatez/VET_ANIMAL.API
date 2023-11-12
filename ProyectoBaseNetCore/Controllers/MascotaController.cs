@@ -37,14 +37,15 @@ namespace ProyectoBaseNetCore.Controllers
         }
 
         [HttpGet("Mascotas")]
-        public async Task<IActionResult> GetMascota() =>Ok(await _service.GetAllMascotasAsync());
-
-        [HttpPost("Mascotas")]
+        public async Task<IActionResult> GetMascotas() =>Ok(await _service.GetAllMascotasAsync());
+        [HttpGet("Mascota")]
+        public async Task<IActionResult> GetMascota(long IdMascota) => Ok(await _service.GetMascotaById(IdMascota));
+        [HttpPost("Mascota")]
         public async Task<IActionResult> NuevaMascota(MascotaDTO Data) =>Ok(await _service.SaveMascota(Data));
-        [HttpPut("Mascotas")]
+        [HttpPut("Mascota")]
         public async Task<IActionResult> EditMascota(MascotaDTO Data) => Ok(await _service.EdirtMascotaAsync(Data));
 
-        [HttpDelete("Mascotas")]
+        [HttpDelete("Mascota")]
         public async Task<IActionResult> EliminaMascota(long IdCliente) => Ok(await _service.DeleteMascota(IdCliente));
     }
 }
