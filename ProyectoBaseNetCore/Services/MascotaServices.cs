@@ -62,6 +62,7 @@ namespace ProyectoBaseNetCore.Services
                     NewPet.Raza = Data.Raza;
                     NewPet.FechaNacimiento = Data.FechaNacimiento;
                     NewPet.Sexo = Data.Sexo;
+                    NewPet.Peso = Data.Peso;
                     NewPet.Activo = true;
                     NewPet.FechaRegistro = DateTime.Now;
                     NewPet.UsuarioRegistro = _usuario;
@@ -78,6 +79,7 @@ namespace ProyectoBaseNetCore.Services
                     CurrentPet.Raza = Data.Raza;
                     CurrentPet.FechaNacimiento = Data.FechaNacimiento;
                     CurrentPet.Sexo = Data.Sexo;
+                    CurrentPet.Peso = Data.Peso;
                     CurrentPet.Activo = true;
                     CurrentPet.FechaModificacion = DateTime.Now;
                     CurrentPet.UsuarioModificacion = _usuario;
