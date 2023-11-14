@@ -54,7 +54,7 @@ namespace ProyectoBaseNetCore.Services
                 var CurrentPet = await _context.Mascota
                 .Where(x => x.Activo && x.NombreMascota == Data.NombreMascota && x.IdCliente == Data.IdCliente).FirstOrDefaultAsync();
 
-                if (CurrentPet != null) throw new Exception("Ya existe una mascota registrada con ese nombre para este cleinte!");
+                if (CurrentPet != null) throw new Exception("Ya existe una mascota registrada con ese nombre para este cliente!");
                 Mascota NewPet = new Mascota();
                 NewPet.NombreMascota = Data.NombreMascota;
                 NewPet.Codigo = Data.CODMascota;
