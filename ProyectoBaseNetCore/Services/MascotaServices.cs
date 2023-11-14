@@ -52,42 +52,23 @@ namespace ProyectoBaseNetCore.Services
             {
 
                 var CurrentPet = await _context.Mascota
-                .Where(x => x.Activo && x.NombreMascota == Data.NombreMascota).FirstOrDefaultAsync();
-                if (CurrentPet == null)
-                {
-                    Mascota NewPet = new Mascota();
-                    NewPet.NombreMascota = Data.NombreMascota;
-                    NewPet.Codigo = Data.CODMascota;
-                    NewPet.IdCliente = Data.IdCliente;
-                    NewPet.Raza = Data.Raza;
-                    NewPet.FechaNacimiento = Data.FechaNacimiento;
-                    NewPet.Sexo = Data.Sexo;
-                    NewPet.Peso = Data.Peso;
-                    NewPet.Activo = true;
-                    NewPet.FechaRegistro = DateTime.Now;
-                    NewPet.UsuarioRegistro = _usuario;
-                    NewPet.IpRegistro = _ip;
-                    await _context.Mascota.AddAsync(NewPet);
-                    await _context.SaveChangesAsync();
-                    return true;
-                }
-                else
-                {
-                    CurrentPet.NombreMascota = Data.NombreMascota;
-                    CurrentPet.Codigo = Data.CODMascota;
-                    CurrentPet.IdCliente = Data.IdCliente;
-                    CurrentPet.Raza = Data.Raza;
-                    CurrentPet.FechaNacimiento = Data.FechaNacimiento;
-                    CurrentPet.Sexo = Data.Sexo;
-                    CurrentPet.Peso = Data.Peso;
-                    CurrentPet.Activo = true;
-                    CurrentPet.FechaModificacion = DateTime.Now;
-                    CurrentPet.UsuarioModificacion = _usuario;
-                    CurrentPet.IpModificacion = _ip;
-                    _context.SaveChanges();
+                .Where(x => x.Activo && x.NombreMascota == Data.NombreMascota && x.IdCliente == Data.IdCliente).FirstOrDefaultAsync();
 
-                    return true;
-                }
+                if (CurrentPet != null) throw new Exception("Ya existe una mascota registrada con ese nombre para este cleinte!");
+                Mascota NewPet = new Mascota();
+                NewPet.NombreMascota = Data.NombreMascota;
+                NewPet.Codigo = Data.CODMascota;
+                NewPet.IdCliente = Data.IdCliente;
+                NewPet.Raza = Data.Raza;
+                NewPet.FechaNacimiento = Data.FechaNacimiento;
+                NewPet.Sexo = Data.Sexo;
+                NewPet.Activo = true;
+                NewPet.FechaRegistro = DateTime.Now;
+                NewPet.UsuarioRegistro = _usuario;
+                NewPet.IpRegistro = _ip;
+                await _context.Mascota.AddAsync(NewPet);
+                await _context.SaveChangesAsync();
+                return true;
             }
             catch (Exception ex)
             {

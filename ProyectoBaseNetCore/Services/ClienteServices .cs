@@ -42,9 +42,40 @@ namespace ProyectoBaseNetCore.Services
                 telefono = x.Telefono,
                 correo= x.Correo,
             }).FirstOrDefaultAsync();
+        static bool ValidarCedulaEcuatoriana(string cedula)
+        {
+            if (cedula.Length != 10)
+            {
+                throw new Exception("La cédula debe tener 10 dígitos");
+            }
 
+            string digitoRegion = cedula.Substring(0, 2);
+
+            if (!int.TryParse(digitoRegion, out int region) || region < 1 || region > 24)
+            {
+                throw new Exception("Número de cédula invalido!");
+            }
+
+            int ultimoDigito = int.Parse(cedula.Substring(9, 1));
+            int sumaTotal = 0;
+
+            for (int i = 0; i < 9; i += 2)
+            {
+                int valor = int.Parse(cedula[i].ToString()) * 2;
+                sumaTotal += (valor > 9) ? valor - 9 : valor;
+            }
+
+            sumaTotal += int.Parse(cedula[1].ToString()) + int.Parse(cedula[3].ToString()) +
+                         int.Parse(cedula[5].ToString()) + int.Parse(cedula[7].ToString());
+
+            int digitoValidador = ((sumaTotal / 10) + 1) * 10 - sumaTotal % 10;
+            if (digitoValidador == 10) digitoValidador = 0;
+
+            return digitoValidador == ultimoDigito;
+        }
         public async Task<bool> SaveCliente(GuardarClienteViewModel Cliente)
         {
+            ValidarCedulaEcuatoriana(Cliente.identificacion);
             var ClienteEncontrada = await _context.Cliente.FirstOrDefaultAsync(x => x.Activo && (x.IdCliente == Cliente.idCliente || x.Nombres == Cliente.nombres));
             if (ClienteEncontrada == null)
             {
