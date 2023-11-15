@@ -42,6 +42,7 @@ namespace ProyectoBaseNetCore.Services
             IdCliente = x.IdCliente,
             Cliente = x.Cliente.Nombres,
             Raza = x.Raza,
+            Peso = x.Peso,
             Sexo = x.Sexo,
             FechaNacimiento = x.FechaNacimiento,
         }).FirstOrDefaultAsync();
@@ -60,6 +61,7 @@ namespace ProyectoBaseNetCore.Services
                 NewPet.Codigo = Data.CODMascota;
                 NewPet.IdCliente = Data.IdCliente;
                 NewPet.Raza = Data.Raza;
+                NewPet.Peso = Data.Peso;
                 NewPet.FechaNacimiento = Data.FechaNacimiento;
                 NewPet.Sexo = Data.Sexo;
                 NewPet.Activo = true;
