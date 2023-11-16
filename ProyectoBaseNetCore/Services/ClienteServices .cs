@@ -30,7 +30,6 @@ namespace ProyectoBaseNetCore.Services
                 correo= x.Correo,
                 codigo = x.Codigo,
             }).ToListAsync();
-
         public async Task<ClienteDTO> GetClientByCI(string CI) => await _context.Cliente
             .Where(x => x.Activo && x.Identificacion == CI).Select(x => new ClienteDTO
             {
@@ -137,6 +136,21 @@ namespace ProyectoBaseNetCore.Services
                 return false;
             }
         }
+
+        public async Task<int> GetNumeroClientes()
+        {
+            try
+            {
+                return await _context.Cliente.CountAsync(x => x.Activo);
+            }
+            catch (Exception ex)
+            {
+                // Manejar errores según tus necesidades
+                throw;
+            }
+        }
+
+
         public async Task<bool> DeleteCliente(long IdCliente)
         {
             try

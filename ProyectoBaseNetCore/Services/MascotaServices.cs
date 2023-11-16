@@ -47,15 +47,30 @@ namespace ProyectoBaseNetCore.Services
             FechaNacimiento = x.FechaNacimiento,
         }).FirstOrDefaultAsync();
 
+
+
         public async Task<bool> SaveMascota(MascotaDTO Data)
         {
             try
             {
+                // Validación del idCliente
+                if (Data.IdCliente <= 0)
+                {
+                    throw new ArgumentException("Cedula de Cliente no encontrada o invalida");
+                }
 
+                // Búsqueda de Mascota Existente
                 var CurrentPet = await _context.Mascota
-                .Where(x => x.Activo && x.NombreMascota == Data.NombreMascota && x.IdCliente == Data.IdCliente).FirstOrDefaultAsync();
+                    .Where(x => x.Activo && x.NombreMascota == Data.NombreMascota && x.IdCliente == Data.IdCliente)
+                    .FirstOrDefaultAsync();
 
-                if (CurrentPet != null) throw new Exception("Ya existe una mascota registrada con ese nombre para este cliente!");
+                // Verificación y excepción si la mascota ya existe
+                if (CurrentPet != null)
+                {
+                    throw new Exception("Ya existe una mascota registrada con ese nombre para este cliente!");
+                }
+
+                // Creación de una Nueva Mascota
                 Mascota NewPet = new Mascota();
                 NewPet.NombreMascota = Data.NombreMascota;
                 NewPet.Codigo = Data.CODMascota;
@@ -68,15 +83,51 @@ namespace ProyectoBaseNetCore.Services
                 NewPet.FechaRegistro = DateTime.Now;
                 NewPet.UsuarioRegistro = _usuario;
                 NewPet.IpRegistro = _ip;
+
+                // Guardado en la Base de Datos
                 await _context.Mascota.AddAsync(NewPet);
                 await _context.SaveChangesAsync();
+
                 return true;
             }
             catch (Exception ex)
             {
+                // Manejo de excepciones y retorno de false
                 return false;
             }
         }
+
+
+        //public async Task<bool> SaveMascota(MascotaDTO Data)
+        //{
+        //    try
+        //    {
+
+        //        var CurrentPet = await _context.Mascota
+        //        .Where(x => x.Activo && x.NombreMascota == Data.NombreMascota && x.IdCliente == Data.IdCliente).FirstOrDefaultAsync();
+
+        //        if (CurrentPet != null) throw new Exception("Ya existe una mascota registrada con ese nombre para este cliente!");
+        //        Mascota NewPet = new Mascota();
+        //        NewPet.NombreMascota = Data.NombreMascota;
+        //        NewPet.Codigo = Data.CODMascota;
+        //        NewPet.IdCliente = Data.IdCliente;
+        //        NewPet.Raza = Data.Raza;
+        //        NewPet.Peso = Data.Peso;
+        //        NewPet.FechaNacimiento = Data.FechaNacimiento;
+        //        NewPet.Sexo = Data.Sexo;
+        //        NewPet.Activo = true;
+        //        NewPet.FechaRegistro = DateTime.Now;
+        //        NewPet.UsuarioRegistro = _usuario;
+        //        NewPet.IpRegistro = _ip;
+        //        await _context.Mascota.AddAsync(NewPet);
+        //        await _context.SaveChangesAsync();
+        //        return true;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return false;
+        //    }
+        //}
 
         public async Task<bool> EdirtMascotaAsync(MascotaDTO Data)
         {
@@ -84,6 +135,7 @@ namespace ProyectoBaseNetCore.Services
             {
 
                 var CurrentPet = await _context.Mascota.FindAsync(Data.IdMascota);
+                if (CurrentPet == null) throw new Exception("Mascota no encontrada!");
 
                 CurrentPet.NombreMascota = Data.NombreMascota;
                 CurrentPet.Codigo = Data.CODMascota;
@@ -103,7 +155,21 @@ namespace ProyectoBaseNetCore.Services
             }
             catch (Exception ex)
             {
-                return false;
+                throw;
+            }
+        }
+
+
+        public async Task<int> GetNumeroMascotas()
+        {
+            try
+            {
+                return await _context.Mascota.CountAsync(x => x.Activo);
+            }
+            catch (Exception ex)
+            {
+                // Manejar errores según tus necesidades
+                throw;
             }
         }
 

@@ -40,6 +40,9 @@ namespace ProyectoBaseNetCore.Controllers
         [HttpGet("Clientes")]
         public async Task<IActionResult> GetClientes() =>Ok(await _service.GetCliente());
 
+        [HttpGet("NumeroClientes")]
+        public async Task<IActionResult> GetNumeroClientes() => Ok(await _service.GetNumeroClientes());
+
         [HttpGet("Cliente")]
         public async Task<IActionResult> GetCliente([FromQuery] string CI) => Ok(await _service.GetClientByCI(CI));
         [HttpPut("Cliente")]
@@ -51,6 +54,8 @@ namespace ProyectoBaseNetCore.Controllers
 
         [HttpDelete("Cliente")]
         public async Task<IActionResult> EliminaCliente(long IdCliente) => Ok(await _service.DeleteCliente(IdCliente));
-        
+
+     
+       
     }
 }
