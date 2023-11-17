@@ -28,12 +28,35 @@ namespace ProyectoBaseNetCore.Services
             {
                 IdHistoriaClinica = x.IdHistoriaClinica,
                 CodigoHistorial = x.CodigoHistorial,
-                Mascota = x.Mascota.NombreMascota,
+                Nombre = x.Mascota.NombreMascota,
+                Cedula = x.Mascota.Cliente.Identificacion,
                 Raza = x.Mascota.Raza,
                 FechaNacimiento = x.Mascota.FechaNacimiento,
                 Sexo = x.Mascota.Sexo,
                 Cliente = x.Mascota.Cliente.Nombres,
                 CODMascota = x.Mascota.Codigo,
+                Peso = x.Mascota.Peso,
+                IdMascota = x.Mascota.IdMascota,
+                IdCliente = x.Mascota.Cliente.IdCliente,
+                FichasSintoma = x.FichasSintoma.Select(f=> new TratamientoDTO.FichaSintomaDTO
+                {
+                    IdFicha=f.IdFicha,
+                    CodigoFicha = f.CodigoFicha,
+                    Fecha = f.FechaRegistro,
+                    FichaDetalles = f.FichaDetalles.Select(fd=> new TratamientoDTO.FichaDetalleDTO
+                    {
+                        IdDetalle = fd.IdDetalle,
+                        Sintoma = fd.Sintoma.Nombre,
+                        Observacion = fd.Observacion,   
+                    }).ToList(),
+                }).ToList(),
+                FichasControl = x.FichaControl.Select(fc => new FichaControlDTO
+                {
+                    IdFichaControl = fc.IdFichaControl,
+                    Peso = fc.Peso,
+                    Motivo = fc.MotivoConsulta.Nombre,
+                    Observacion = fc.Observacion,
+                }).ToList(),
             }).ToListAsync();
 
 
@@ -103,7 +126,8 @@ namespace ProyectoBaseNetCore.Services
         {
 
             if (Ficha.IdMotivo <= 0) throw new Exception("Debe registrar un motivo consulta!");
-
+            bool Exististorial = await _context.HistoriaClinica.Where(x=> x.IdHistoriaClinica== Ficha.IdHistoriaClinica).AnyAsync();
+            if (!Exististorial) throw new Exception("Historia clinica no encntrada!");
             var codigo = await COD.GetOrCreateCodeAsync("FC");
             FichaControl NewFControl = new FichaControl();
             NewFControl.CodigoFichaControl = codigo;
