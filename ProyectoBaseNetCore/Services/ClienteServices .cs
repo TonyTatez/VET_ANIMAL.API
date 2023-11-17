@@ -30,6 +30,19 @@ namespace ProyectoBaseNetCore.Services
                 correo= x.Correo,
                 codigo = x.Codigo,
             }).ToListAsync();
+        public async Task<List<MascotaDTO>> GetMascotasCliente(string CI) => await _context.Mascota
+            .Where(x => x.Activo && x.Cliente.Identificacion.Equals(CI)).Select(x => new MascotaDTO
+            {
+                IdMascota = x.IdMascota,
+                CODMascota = x.Codigo,
+                Nombre = x.NombreMascota,
+                IdCliente = x.IdCliente,
+                Cliente = x.Cliente.Nombres,
+                Raza = x.Raza,
+                Peso = x.Peso,
+                Sexo = x.Sexo,
+                FechaNacimiento = x.FechaNacimiento,
+            }).ToListAsync();
         public async Task<ClienteDTO> GetClientByCI(string CI) => await _context.Cliente
             .Where(x => x.Activo && x.Identificacion == CI).Select(x => new ClienteDTO
             {

@@ -54,8 +54,10 @@ namespace ProyectoBaseNetCore.Controllers
 
         [HttpDelete("Cliente")]
         public async Task<IActionResult> EliminaCliente(long IdCliente) => Ok(await _service.DeleteCliente(IdCliente));
+        [HttpGet("Cliente/mascotas")]
+        public async Task<IActionResult> GetMascotasClientes([FromQuery] string CI) => Ok(await _service.GetMascotasCliente(CI));
 
-     
-       
+
+
     }
 }
