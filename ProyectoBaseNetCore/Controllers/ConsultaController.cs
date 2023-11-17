@@ -53,6 +53,12 @@ namespace ProyectoBaseNetCore.Controllers
         [HttpGet("FichasControl")]
         public async Task<IActionResult> GetAllFichasControl () => Ok(await _service.GetAllfichasControlAsync());
 
+        /// <summary>
+        /// Crer ficha de control
+        /// </summary>
+        /// <remarks>
+        /// Aqui se envia l curepo para crear la fichaq 
+        /// </remarks>
         [HttpPost("FichaControl")]
         public async Task<IActionResult> CreateFichaControl (FichaControlDTO Ficha) => Ok(await _service.SaveFichaControlAsync(Ficha));
 
