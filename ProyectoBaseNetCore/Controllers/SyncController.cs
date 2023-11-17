@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using ProyectoBaseNetCore.DTOs;
 using ProyectoBaseNetCore.Entities;
 using ProyectoBaseNetCore.Services;
+using ProyectoBaseNetCore.Utilities;
 
 namespace ProyectoBaseNetCore.Controllers
 {
@@ -34,6 +35,7 @@ namespace ProyectoBaseNetCore.Controllers
             string userName = Task.Run(async () => await userManager.FindByNameAsync(_httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == "email").Value)).Result.UserName;
             var ip = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress?.ToString();
             this._service = new SyncServices(_context,configuration, userName, ip);
+            
         }
         /// <summary>
         /// Sincronizacion de catalogos

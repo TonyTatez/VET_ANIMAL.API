@@ -21,7 +21,7 @@ namespace ProyectoBaseNetCore.Controllers
         private readonly IConfiguration configuration;
         private readonly IAuthorizationService authorizationService;
 
-        public DinamicQuestionsController(ApplicationDbContext context, IMapper mapper, IConfiguration configuration, IAuthorizationService authorizationService)
+        private DinamicQuestionsController(ApplicationDbContext context, IMapper mapper, IConfiguration configuration, IAuthorizationService authorizationService)
         {
             this.context = context;
             this.mapper = mapper;
@@ -30,7 +30,7 @@ namespace ProyectoBaseNetCore.Controllers
         }
 
         [HttpPost("AddForm")]
-        public async Task<ActionResult> AddForm(Form form)
+        private async Task<ActionResult> AddForm(Form form)
         {
             var checkForm = await context.Forms.Where(x => x.FormName.ToUpper().Trim().Contains(form.FormName.ToUpper().Trim())).FirstOrDefaultAsync();
             if (checkForm is null)
@@ -46,7 +46,7 @@ namespace ProyectoBaseNetCore.Controllers
         }
 
         [HttpPost("AddSection")]
-        public async Task<ActionResult> AddSection(Section section)
+        private async Task<ActionResult> AddSection(Section section)
         {
             var checkSection = await context.Sections.Where(x => x.SectionName.ToUpper().Trim().Contains(section.SectionName.ToUpper().Trim())).FirstOrDefaultAsync();
             if (checkSection is null)
@@ -62,7 +62,7 @@ namespace ProyectoBaseNetCore.Controllers
         }
 
         [HttpPost("AddQuestion")]
-        public async Task<ActionResult> AddQuestion(Question question)
+        private async Task<ActionResult> AddQuestion(Question question)
         {
             var questionTypes = await context.QuestionTypes.ToListAsync();
             var checkQuestion = await context.Questions.Where(x => x.QuestionDesc.ToUpper().Trim().Equals(question.QuestionDesc.ToUpper().Trim())).FirstOrDefaultAsync();
@@ -105,7 +105,7 @@ namespace ProyectoBaseNetCore.Controllers
         }
 
         [HttpPost("AddQuestionType")]
-        public async Task<ActionResult> AddQuestionType()
+        private async Task<ActionResult> AddQuestionType()
         {
             var dbQuestionTypes = await context.QuestionTypes.ToListAsync();
             var allQuestionTypes = new List<string>();
@@ -121,7 +121,7 @@ namespace ProyectoBaseNetCore.Controllers
         }
 
         [HttpPost("AddCatalog")]
-        public async Task<ActionResult> AddCatalog(Catalog catalog)
+        private async Task<ActionResult> AddCatalog(Catalog catalog)
         {
             var checkCatalog = await context.Catalogs.Where(x => x.CatalogName.ToUpper().Trim().Contains(catalog.CatalogName.ToUpper().Trim())).FirstOrDefaultAsync();
             if (checkCatalog is null)
@@ -138,7 +138,7 @@ namespace ProyectoBaseNetCore.Controllers
         }
 
         [HttpPost("AddItem")]
-        public async Task<ActionResult> AddItem(Item item)
+        private async Task<ActionResult> AddItem(Item item)
         {
             var checkItem = context.Items.Where(x => x.ItemName.ToUpper().Trim().Equals(item.ItemName.ToUpper().Trim())).FirstOrDefault();
             if (checkItem is null)
@@ -154,7 +154,7 @@ namespace ProyectoBaseNetCore.Controllers
         }
 
         [HttpPost("AddItemsToCatalog")]
-        public async Task<ActionResult> AddItemsToCatalog(ItemsHelper itemsToCatalog)
+        private async Task<ActionResult> AddItemsToCatalog(ItemsHelper itemsToCatalog)
         {
             var dbCatalogsItems = await context.CatalogItems
                 .OrderByDescending(x => x.CatalogOrder)
@@ -184,7 +184,7 @@ namespace ProyectoBaseNetCore.Controllers
         }
 
         [HttpPost("AddFormSectionQuestions")]
-        public async Task<ActionResult> AddFormSectionQuestions(QuestionsHelper formSectionQuestions)
+        private async Task<ActionResult> AddFormSectionQuestions(QuestionsHelper formSectionQuestions)
         {
             var forms = await context.Forms.ToListAsync();
             var sections = await context.Sections.ToListAsync();
@@ -258,7 +258,7 @@ namespace ProyectoBaseNetCore.Controllers
         }
 
         [HttpPost("SendAnswers")]
-        public async Task<ActionResult> SendAnswers(FormDTO form) => Ok(
+        private async Task<ActionResult> SendAnswers(FormDTO form) => Ok(
         await Task.Run(() =>
         {
             List<object> allAnswers = new List<object>();
@@ -278,7 +278,7 @@ namespace ProyectoBaseNetCore.Controllers
         }));
 
         [HttpGet("DinamicQuestions")]
-        public async Task<ActionResult> DinamicQuestions() => Ok(
+        private async Task<ActionResult> DinamicQuestions() => Ok(
         await Task.Run(async () =>
         {
             var forms = await context.Forms.AsNoTracking().ToListAsync();
@@ -370,7 +370,7 @@ namespace ProyectoBaseNetCore.Controllers
         }));
 
         [HttpPost("AddTestQuestions")]
-        public async Task<ActionResult> AddTestQuestions()
+        private async Task<ActionResult> AddTestQuestions()
         {
             await AddQuestionType();
             await AddForm(new Form { FormName = "Form 1" });

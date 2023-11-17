@@ -4,24 +4,24 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ProyectoBaseNetCore.DTOs;
 using ProyectoBaseNetCore.Entities;
-using ProyectoBaseNetCore.Models;
 using ProyectoBaseNetCore.Services;
+using VET_ANIMAL_API.DTOs;
 
 namespace ProyectoBaseNetCore.Controllers
 {
     [ApiController]
-    [Route("api/tratamiento/")]
+    [Route("api/consulta/")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class TratamientoController : Controller
+    public class ConsultaController : Controller
     {
         private readonly IConfiguration configuration;
         private readonly IAuthorizationService authorizationService;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        protected TratamientoServices _service;
+        protected ConsultaServices _service;
         private readonly ApplicationDbContext _context;
 
-        public TratamientoController(ApplicationDbContext context, 
+        public ConsultaController(ApplicationDbContext context, 
             IConfiguration configuration, 
             IAuthorizationService Authorization, 
             UserManager<ApplicationUser> userManager, 
@@ -34,17 +34,30 @@ namespace ProyectoBaseNetCore.Controllers
             this._httpContextAccessor = httpContextAccessor;
             string userName = Task.Run(async () => await userManager.FindByNameAsync(_httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == "email").Value)).Result.UserName;
             var ip = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress?.ToString();
-            this._service = new TratamientoServices(_context,configuration, userName, ip);
+            this._service = new ConsultaServices(_context,configuration, userName, ip);
         }
 
         [HttpGet("historial")]
         public async Task<IActionResult> GetHistoriales() =>Ok(await _service.GetAllHitorialAsync());
 
-        [HttpPost("historial")]
-        public async Task<IActionResult> CrarHistorial(TratamientoDTO.HistoriaClinicDTO Historial) =>Ok(await _service.SaveHistorial(Historial));
-          
 
         [HttpDelete("historial")]
         public async Task<IActionResult> EliminaCliente(long IdCliente) => Ok(await _service.DeleteHistorial(IdCliente));
+
+        /// <summary>
+        /// Listar Fichas de control
+        /// </summary>
+        /// <remarks>
+        /// Aqui se cargan una lista de todoas
+        /// </remarks>
+        [HttpGet("FichasControl")]
+        public async Task<IActionResult> GetAllFichasControl () => Ok(await _service.GetAllfichasControlAsync());
+
+        [HttpPost("FichaControl")]
+        public async Task<IActionResult> CreateFichaControl (FichaControlDTO Ficha) => Ok(await _service.SaveFichaControlAsync(Ficha));
+
+        [HttpPut("FichaControl")]
+        public async Task<IActionResult> EditFichaControl(FichaControlDTO Ficha) => Ok(await _service.EditFichaControlAsync(Ficha));
+
     }
 }

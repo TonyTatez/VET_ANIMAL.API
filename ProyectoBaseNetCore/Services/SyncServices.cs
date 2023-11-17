@@ -8,6 +8,7 @@ using ProyectoBaseNetCore.Entities;
 using Microsoft.AspNetCore.Http;
 using static NPOI.HSSF.Util.HSSFColor;
 using System;
+using ProyectoBaseNetCore.Utilities;
 
 namespace ProyectoBaseNetCore.Services
 {
@@ -18,12 +19,16 @@ namespace ProyectoBaseNetCore.Services
         private static string _ip;
         private readonly ApplicationDbContext _context;
         private readonly IConfiguration configuration;
+        private readonly ConsultaServices _consultaService;
+        private readonly GeneratorCodeHelper COD;
         public SyncServices(ApplicationDbContext context, IConfiguration configuration, string usuario, string ip)
         {
             _context = context;
             this.configuration = configuration;
             _ip = ip;
             _usuario = usuario;
+            _consultaService = new ConsultaServices(context, configuration, ip, usuario);
+            COD = new GeneratorCodeHelper(context, configuration, ip, usuario);
         }
         public async Task<ImportResponseDTO> SyncClientsAndPets(IFormFile file)
         {
@@ -34,7 +39,7 @@ namespace ProyectoBaseNetCore.Services
                 ISheet sheet = workbook.GetSheetAt(0); // Selecciona la hoja de trabajo
 
                 string[] expectedHeaders = new string[] {
-            "cod.Cliente","NOMBRES","CEDULA","DIRECCION","TELEFONO","CORREO","cod.Mascota","NOMBRE","RAZA","PESO","SEXO","FECH.NAC"
+            "NOMBRES","CEDULA","DIRECCION","TELEFONO","CORREO","NOMBRE","RAZA","PESO","SEXO","FECH.NAC"
         };
 
                 Dictionary<string, object> result = await _ExelHelper.ValidarFormatoArchivo(sheet, expectedHeaders);
@@ -48,6 +53,7 @@ namespace ProyectoBaseNetCore.Services
                 StringBuilder messageError = new StringBuilder();
                 long IdCurrent = 0;
                 // List<CheckListAlistamientoDTO> CheckList = new List<CheckListAlistamientoDTO>();
+
                 for (int row = sheet.FirstRowNum + 1; row <= sheet.LastRowNum; row++)
                 {
                     IRow excelRow = sheet.GetRow(row);
@@ -55,22 +61,17 @@ namespace ProyectoBaseNetCore.Services
                     if (excelRow != null)
                     {
 
-                        string CodigoC = excelRow.GetCell(0)?.ToString();
-                        if (CodigoC.Equals("Cl-119"))
-                        {
-                            var x = 1;
-                        }
-                        string Nombres = excelRow.GetCell(1)?.ToString();
-                        string Cedula = excelRow.GetCell(2)?.ToString();
-                        string Direccion = excelRow.GetCell(3)?.ToString();
-                        string Celular = excelRow.GetCell(4)?.ToString();
-                        string Correo = excelRow.GetCell(5)?.ToString();
-                        string CodigoM = excelRow.GetCell(6)?.ToString();
-                        string NombreM = excelRow.GetCell(7)?.ToString();
-                        string Raza = excelRow.GetCell(8)?.ToString();
-                        float Peso = float.Parse(excelRow.GetCell(9)?.ToString()??"0");
-                        string Sexo = excelRow.GetCell(10)?.ToString();
-                        DateTime? FNac = excelRow.GetCell(11)?.ToString() != null ? DateTime.Parse(excelRow.GetCell(11)?.ToString()) :null;
+                       
+                        string Nombres = excelRow.GetCell(0)?.ToString();
+                        string Cedula = excelRow.GetCell(1)?.ToString();
+                        string Direccion = excelRow.GetCell(2)?.ToString();
+                        string Celular = excelRow.GetCell(3)?.ToString();
+                        string Correo = excelRow.GetCell(4)?.ToString();
+                        string NombreM = excelRow.GetCell(5)?.ToString();
+                        string Raza = excelRow.GetCell(6)?.ToString();
+                        float Peso = float.Parse(excelRow.GetCell(7)?.ToString()??"0");
+                        string Sexo = excelRow.GetCell(8)?.ToString();
+                        DateTime? FNac = excelRow.GetCell(9)?.ToString() != null ? DateTime.Parse(excelRow.GetCell(9)?.ToString()) :null;
 
                         // Realizar validaciones y procesamiento de datos de acuerdo a tus requisitos
                         if (string.IsNullOrEmpty(Cedula) || Cedula.Length < 10)
@@ -109,11 +110,12 @@ namespace ProyectoBaseNetCore.Services
                             var Cliente = await _context.Cliente.Where(c => c.Identificacion.Equals(Cedula)).FirstOrDefaultAsync();
                             if (Cliente == null)
                             {
-                               
+                                var codigocLIENTE = await COD.GetOrCreateCodeAsync("CL",true);
+                                var codigocMascota = await COD.GetOrCreateCodeAsync("MC",true);
                                 var nuevo = new Cliente
                                 {
                                     Identificacion = Cedula,
-                                    Codigo = CodigoC,
+                                    Codigo = codigocLIENTE,
                                     Nombres = Nombres,
                                     Correo = Correo,
                                     Direccion = Direccion,
@@ -125,7 +127,7 @@ namespace ProyectoBaseNetCore.Services
                                     Mascotas = new List<Mascota> {
                                         new Mascota
                                         {
-                                            Codigo = CodigoM,
+                                            Codigo = codigocMascota,
                                             NombreMascota = NombreM,
                                             Raza= Raza,
                                             Sexo = Sexo,
@@ -142,12 +144,7 @@ namespace ProyectoBaseNetCore.Services
                             }
                             else
                             {
-                                if (CodigoC.Equals("Cl-047"))
-                                {
-                                    var x = 1;
-                                }
                                 Cliente.Identificacion = Cedula;
-                                Cliente.Codigo = CodigoC;
                                 Cliente.Nombres = Nombres;
                                 Cliente.Correo = Correo;
                                 Cliente.Direccion = Direccion;
@@ -156,13 +153,14 @@ namespace ProyectoBaseNetCore.Services
                                 Cliente.UsuarioModificacion = _usuario;
                                 Cliente.IpModificacion = _ip;
                                 Cliente.FechaModificacion = DateTime.Now;
-                                var FMascota = await _context.Mascota.Where(m =>  m.Codigo == CodigoM && m.IdCliente == Cliente.IdCliente).FirstOrDefaultAsync();
+                                var FMascota = await _context.Mascota.Where(m => m.IdCliente == Cliente.IdCliente).FirstOrDefaultAsync();
                                 if (FMascota == null)
                                 {
+                                    var codigocMascota = await COD.GetOrCreateCodeAsync("MC", true);
                                     var NMascota = new Mascota
                                     {
                                         IdCliente = Cliente.IdCliente,
-                                        Codigo = CodigoM,
+                                        Codigo = codigocMascota,
                                         NombreMascota = NombreM,
                                         Raza = Raza,
                                         Sexo = Sexo,
@@ -177,7 +175,6 @@ namespace ProyectoBaseNetCore.Services
 
                                 }else
                                 {
-                                    FMascota.Codigo = CodigoM;
                                     FMascota.NombreMascota = NombreM;
                                     FMascota.Raza = Raza;
                                     FMascota.Sexo = Sexo;

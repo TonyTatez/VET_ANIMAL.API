@@ -9,6 +9,7 @@ namespace ProyectoBaseNetCore.Services
         private static string _usuario;
         private static string _ip;
         private readonly ApplicationDbContext _context;
+        private readonly ConsultaServices _consultaService;
         private readonly IConfiguration configuration;
         public MascotaServices(ApplicationDbContext context, IConfiguration configuration, string ip, string usuario)
         {
@@ -16,6 +17,7 @@ namespace ProyectoBaseNetCore.Services
             this.configuration = configuration;
             _ip = ip;
             _usuario = usuario;
+            _consultaService = new ConsultaServices(context,configuration,ip,usuario);
         }
 
 
@@ -54,10 +56,8 @@ namespace ProyectoBaseNetCore.Services
             try
             {
                 // Validación del idCliente
-                if (Data.IdCliente <= 0)
-                {
-                    throw new ArgumentException("Cedula de Cliente no encontrada o invalida");
-                }
+                if (Data.IdCliente <= 0) throw new ArgumentException("Cedula de Cliente no encontrada o invalida");
+                
 
                 // Búsqueda de Mascota Existente
                 var CurrentPet = await _context.Mascota
@@ -65,10 +65,8 @@ namespace ProyectoBaseNetCore.Services
                     .FirstOrDefaultAsync();
 
                 // Verificación y excepción si la mascota ya existe
-                if (CurrentPet != null)
-                {
-                    throw new Exception("Ya existe una mascota registrada con ese nombre para este cliente!");
-                }
+                if (CurrentPet is not null) throw new Exception("Ya existe una mascota registrada con ese nombre para este cliente!");
+                
 
                 // Creación de una Nueva Mascota
                 Mascota NewPet = new Mascota();
@@ -87,47 +85,16 @@ namespace ProyectoBaseNetCore.Services
                 // Guardado en la Base de Datos
                 await _context.Mascota.AddAsync(NewPet);
                 await _context.SaveChangesAsync();
+                await _consultaService.SaveHistorial(NewPet.IdMascota);
 
                 return true;
             }
             catch (Exception ex)
             {
                 // Manejo de excepciones y retorno de false
-                return false;
+                throw;
             }
         }
-
-
-        //public async Task<bool> SaveMascota(MascotaDTO Data)
-        //{
-        //    try
-        //    {
-
-        //        var CurrentPet = await _context.Mascota
-        //        .Where(x => x.Activo && x.NombreMascota == Data.NombreMascota && x.IdCliente == Data.IdCliente).FirstOrDefaultAsync();
-
-        //        if (CurrentPet != null) throw new Exception("Ya existe una mascota registrada con ese nombre para este cliente!");
-        //        Mascota NewPet = new Mascota();
-        //        NewPet.NombreMascota = Data.NombreMascota;
-        //        NewPet.Codigo = Data.CODMascota;
-        //        NewPet.IdCliente = Data.IdCliente;
-        //        NewPet.Raza = Data.Raza;
-        //        NewPet.Peso = Data.Peso;
-        //        NewPet.FechaNacimiento = Data.FechaNacimiento;
-        //        NewPet.Sexo = Data.Sexo;
-        //        NewPet.Activo = true;
-        //        NewPet.FechaRegistro = DateTime.Now;
-        //        NewPet.UsuarioRegistro = _usuario;
-        //        NewPet.IpRegistro = _ip;
-        //        await _context.Mascota.AddAsync(NewPet);
-        //        await _context.SaveChangesAsync();
-        //        return true;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return false;
-        //    }
-        //}
 
         public async Task<bool> EdirtMascotaAsync(MascotaDTO Data)
         {

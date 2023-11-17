@@ -24,7 +24,7 @@ namespace ProyectoBaseNetCore.Controllers
         private readonly IMapper mapper;
         private readonly LinqHelper linqHelper;
 
-        public SocketController(IHubContext<ChatHub> hubContext, UserManager<ApplicationUser> userManager, IMapper mapper, LinqHelper linqHelper)
+        private SocketController(IHubContext<ChatHub> hubContext, UserManager<ApplicationUser> userManager, IMapper mapper, LinqHelper linqHelper)
         {
             _hubContext = hubContext;
             this.userManager = userManager;
@@ -34,7 +34,7 @@ namespace ProyectoBaseNetCore.Controllers
 
         [AllowAnonymous]
         [HttpPost("EnviarMensajeATodos")]
-        public IActionResult EnviarMensajeATodos([FromBody] MensajeSocketDTO mensaje)
+        private IActionResult EnviarMensajeATodos([FromBody] MensajeSocketDTO mensaje)
         {
             _hubContext.Clients.All.SendAsync("RecibirMensaje", mensaje.Usuario, mensaje.Contenido);
             return Ok();
@@ -42,7 +42,7 @@ namespace ProyectoBaseNetCore.Controllers
 
         [AllowAnonymous]
         [HttpGet("UsuarioConectado")]
-        public IActionResult UsuarioConectado()
+        private IActionResult UsuarioConectado()
         {
             //string username = User.Identity.Name;
             string username = "geo@smoke.com";
@@ -52,11 +52,11 @@ namespace ProyectoBaseNetCore.Controllers
 
         [AllowAnonymous]
         [HttpGet("ListaDeUsuarios")]
-        public async Task<IActionResult> ListaDeUsuariosAsync() => Ok(await linqHelper.GetMappedListAsync<ApplicationUser, UserInfoDTO>(await userManager.Users.ToListAsync(), x => true));
+        private async Task<IActionResult> ListaDeUsuariosAsync() => Ok(await linqHelper.GetMappedListAsync<ApplicationUser, UserInfoDTO>(await userManager.Users.ToListAsync(), x => true));
 
         [AllowAnonymous]
         [HttpPost("EnviarMensajeAGrupo")]
-        public async Task<IActionResult> EnviarMensajeAGrupo([FromBody] MensajeSocketDTO mensaje)
+        private async Task<IActionResult> EnviarMensajeAGrupo([FromBody] MensajeSocketDTO mensaje)
         {
             string contenido = mensaje.Contenido;
             await _hubContext.Clients.Group(mensaje.Grupo).SendAsync("RecibirMensaje", mensaje.Usuario, mensaje.Contenido);
@@ -65,7 +65,7 @@ namespace ProyectoBaseNetCore.Controllers
 
         [AllowAnonymous]
         [HttpPost("EnviarMensajeAUsuario")]
-        public async Task<IActionResult> EnviarMensajeAUsuario([FromBody] MensajeSocketDTO mensaje)
+        private async Task<IActionResult> EnviarMensajeAUsuario([FromBody] MensajeSocketDTO mensaje)
         {
             var user = await userManager.FindByNameAsync(mensaje.UsuarioDestino);
             if (user is not null)
@@ -80,7 +80,7 @@ namespace ProyectoBaseNetCore.Controllers
         }
 
         [HttpPost("EnviarMensaje")]
-        public async Task<IActionResult> EnviarMensaje([FromBody] MensajeSocketDTO mensaje)
+        private async Task<IActionResult> EnviarMensaje([FromBody] MensajeSocketDTO mensaje)
         {
             var user = await userManager.FindByNameAsync(ClaimTypes.NameIdentifier);
             var client = await userManager.FindByNameAsync(mensaje.UsuarioDestino);

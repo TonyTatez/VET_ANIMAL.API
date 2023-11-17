@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ProyectoBaseNetCore.Entities;
 using ProyectoBaseNetCore.Entities.DinamicQuestionEntities;
+using VET_ANIMAL_API.Entities;
 
 namespace ProyectoBaseNetCore
 {
@@ -22,10 +23,11 @@ namespace ProyectoBaseNetCore
         public DbSet<Item> Items { get; set; }
         public DbSet<Catalog> Catalogs { get; set; }
         public DbSet<CatalogItem> CatalogItems { get; set; }
-
+        //CAT
         public DbSet<Cliente> Cliente { get; set; }
         public DbSet<Mascota> Mascota { get; set; }
         public DbSet<CodigosSecuencia> CodigosSecuencia { get; set; }
+        public DbSet<MotivoConsulta> MotivoConsulta { get; set; }
 
         public DbSet<FichaSintoma> FichaSintomas { get; set; }
         public DbSet<HistoriaClinica> HistoriaClinica { get; set; }
@@ -33,6 +35,7 @@ namespace ProyectoBaseNetCore
         public DbSet<TipoEnfermedad> TipoEnfermedad { get; set; }
         public DbSet<Enfermedad> Enfermedad { get; set; }
         public DbSet<FichaDetalle> Detalles { get; set; }
+        public DbSet<FichaControl> FichaControl { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

@@ -17,15 +17,15 @@ namespace ProyectoBaseNetCore.Utilities
             _ip = ip;
             _usuario = usuario;
         }
-        public async Task<string> GetOrCreateCodeAsync( string code)
+        public async Task<string> GetOrCreateCodeAsync( string code, bool D2 =  false)
         {
             var existingCode = await _context.CodigosSecuencia.FirstOrDefaultAsync(c => c.Codigo == code);
-
+            string CantidadCeros = D2 == true ? "D4" : "D9";
             if (existingCode != null)
             {
                 existingCode.UltimoNumero = existingCode.UltimoNumero + 1;
                 await _context.SaveChangesAsync();
-                return existingCode.Codigo + "-" + DateTime.Now.Year.ToString() + "-" + (existingCode.UltimoNumero).ToString("D9");
+                return existingCode.Codigo + "-" + DateTime.Now.Year.ToString() + "-" + (existingCode.UltimoNumero).ToString(CantidadCeros);
             }
             else
             {
@@ -41,7 +41,7 @@ namespace ProyectoBaseNetCore.Utilities
                 await _context.CodigosSecuencia.AddAsync(newCode);
                 await _context.SaveChangesAsync();
 
-                return newCode.Codigo + "-" + DateTime.Now.Year.ToString() + "-" + (newCode.UltimoNumero).ToString("D9");
+                return newCode.Codigo + "-" + DateTime.Now.Year.ToString() + "-" + (newCode.UltimoNumero).ToString(CantidadCeros);
             }
         }
     }
