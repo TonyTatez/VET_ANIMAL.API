@@ -40,6 +40,7 @@ namespace ProyectoBaseNetCore.Services
                 IdCliente = x.Mascota.Cliente.IdCliente,
                 FichasSintoma = x.FichasSintoma.Select(f=> new TratamientoDTO.FichaSintomaDTO
                 {
+                    
                     IdFicha=f.IdFicha,
                     CodigoFicha = f.CodigoFicha,
                     Fecha = f.FechaRegistro,
@@ -52,6 +53,8 @@ namespace ProyectoBaseNetCore.Services
                 }).ToList(),
                 FichasControl = x.FichaControl.Select(fc => new FichaControlDTO
                 {
+                    CodigoFichaControl = fc.CodigoFichaControl,
+                    Fecha = fc.FechaRegistro,
                     IdFichaControl = fc.IdFichaControl,
                     Peso = fc.Peso,
                     Motivo = fc.MotivoConsulta.Nombre,
@@ -118,6 +121,8 @@ namespace ProyectoBaseNetCore.Services
            .Where(x => x.Activo).Select(x => new FichaControlDTO
            {
                IdFichaControl = x.IdFichaControl,
+               Fecha = x.FechaRegistro,
+               CodigoFichaControl = x.CodigoFichaControl,
                Peso = x.Peso,
                Motivo = x.MotivoConsulta.Nombre,
                Observacion = x.Observacion,
@@ -134,6 +139,7 @@ namespace ProyectoBaseNetCore.Services
             NewFControl.IdMotivo = Ficha.IdMotivo;
             NewFControl.Peso = Ficha.Peso;
             NewFControl.Observacion = Ficha.Observacion;
+            NewFControl.IdHistoriaClinica = Ficha.IdHistoriaClinica;
 
             NewFControl.Activo = true;
             NewFControl.FechaRegistro = DateTime.Now;
