@@ -130,7 +130,7 @@ namespace ProyectoBaseNetCore.Services
         public async Task<bool> SaveFichaControlAsync(FichaControlDTO Ficha)
         {
 
-            if (Ficha.Motivo == null) throw new Exception("Debe registrar un motivo consulta!");
+            if (string.IsNullOrEmpty(Ficha.Motivo)) throw new Exception("Debe registrar un motivo consulta!");
             bool Exististorial = await _context.HistoriaClinica.Where(x => x.IdHistoriaClinica == Ficha.IdHistoriaClinica).AnyAsync();
             if (!Exististorial) throw new Exception("Historia clinica no encntrada!");
             var codigo = await COD.GetOrCreateCodeAsync("FC");
