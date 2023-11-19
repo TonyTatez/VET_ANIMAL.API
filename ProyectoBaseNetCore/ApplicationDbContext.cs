@@ -15,14 +15,14 @@ namespace ProyectoBaseNetCore
         {
 
         }
-        public DbSet<Form> Forms { get; set; }
-        public DbSet<Section> Sections { get; set; }
-        public DbSet<Question> Questions { get; set; }
-        public DbSet<FormSectionQuestion> FormSectionQuestions { get; set; }
-        public DbSet<QuestionType> QuestionTypes { get; set; }
-        public DbSet<Item> Items { get; set; }
-        public DbSet<Catalog> Catalogs { get; set; }
-        public DbSet<CatalogItem> CatalogItems { get; set; }
+        //public DbSet<Form> Forms { get; set; }
+        //public DbSet<Section> Sections { get; set; }
+        //public DbSet<Question> Questions { get; set; }
+        //public DbSet<FormSectionQuestion> FormSectionQuestions { get; set; }
+        //public DbSet<QuestionType> QuestionTypes { get; set; }
+        //public DbSet<Item> Items { get; set; }
+        //public DbSet<Catalog> Catalogs { get; set; }
+        //public DbSet<CatalogItem> CatalogItems { get; set; }
         //CAT
         public DbSet<Cliente> Cliente { get; set; }
         public DbSet<Mascota> Mascota { get; set; }
@@ -48,14 +48,14 @@ namespace ProyectoBaseNetCore
             modelBuilder.Entity<IdentityUserClaim<string>>().ToTable("UserClaim", "SEG");
             modelBuilder.Entity<IdentityUserLogin<string>>().ToTable("UserLogin", "SEG");
             //CAT
-            modelBuilder.Entity<Form>().ToTable("Forms", "CAT");
-            modelBuilder.Entity<Section>().ToTable("Sections", "CAT");
-            modelBuilder.Entity<Question>().ToTable("Questions", "CAT");
-            modelBuilder.Entity<FormSectionQuestion>().ToTable("FormSectionQuestions", "CAT");
-            modelBuilder.Entity<QuestionType>().ToTable("QuestionTypes", "CAT");
-            modelBuilder.Entity<Item>().ToTable("Items", "CAT");
-            modelBuilder.Entity<Catalog>().ToTable("Catalogs", "CAT");
-            modelBuilder.Entity<CatalogItem>().ToTable("CatalogItems", "CAT");
+            //modelBuilder.Entity<Form>().ToTable("Forms", "CAT");
+            //modelBuilder.Entity<Section>().ToTable("Sections", "CAT");
+            //modelBuilder.Entity<Question>().ToTable("Questions", "CAT");
+            //modelBuilder.Entity<FormSectionQuestion>().ToTable("FormSectionQuestions", "CAT");
+            //modelBuilder.Entity<QuestionType>().ToTable("QuestionTypes", "CAT");
+            //modelBuilder.Entity<Item>().ToTable("Items", "CAT");
+            //modelBuilder.Entity<Catalog>().ToTable("Catalogs", "CAT").Property(c => c.CatalogName).HasColumnType("text").IsRequired();
+            //modelBuilder.Entity<CatalogItem>().ToTable("CatalogItems", "CAT");
             
         }
     //    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

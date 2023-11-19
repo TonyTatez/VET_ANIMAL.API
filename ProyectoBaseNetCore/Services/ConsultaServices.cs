@@ -133,7 +133,7 @@ namespace ProyectoBaseNetCore.Services
             if (string.IsNullOrEmpty(Ficha.Motivo)) throw new Exception("Debe registrar un motivo consulta!");
             bool Exististorial = await _context.HistoriaClinica.Where(x => x.IdHistoriaClinica == Ficha.IdHistoriaClinica).AnyAsync();
             if (!Exististorial) throw new Exception("Historia clinica no encntrada!");
-            var codigo = await COD.GetOrCreateCodeAsync("FC");
+            string codigo = await COD.GetOrCreateCodeAsync("FC");
             long IdMotivo = await COD.GetOrCreateMotivoAsync(Ficha.Motivo);
             FichaControl NewFControl = new FichaControl
             {
@@ -147,7 +147,6 @@ namespace ProyectoBaseNetCore.Services
                 UsuarioRegistro = _usuario,
                 IpRegistro = _ip,
             };
-
             await _context.FichaControl.AddAsync(NewFControl);
             await _context.SaveChangesAsync();
 
