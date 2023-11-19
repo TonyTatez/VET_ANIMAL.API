@@ -38,7 +38,7 @@ namespace ProyectoBaseNetCore.Controllers
         }
 
         [HttpGet("historial")]
-        public async Task<IActionResult> GetHistoriales(long IdMascota) =>Ok(await _service.GetAllHitorialAsync(IdMascota));
+        public async Task<IActionResult> GetHistoriales(long CI) =>Ok(await _service.GetAllHitorialAsync(CI));
 
 
         [HttpDelete("historial")]

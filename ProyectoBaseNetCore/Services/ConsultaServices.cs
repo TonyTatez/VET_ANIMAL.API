@@ -23,8 +23,8 @@ namespace ProyectoBaseNetCore.Services
             _usuario = usuario;
             COD = new GeneratorCodeHelper(context, configuration, ip, usuario);
         }
-        public async Task<TratamientoDTO.HistoriaClinicDTO> GetAllHitorialAsync(long idMascota) => await _context.HistoriaClinica
-            .Where(x => x.Activo && x.Mascota.IdMascota == idMascota).Select(x => new TratamientoDTO.HistoriaClinicDTO
+        public async Task<TratamientoDTO.HistoriaClinicDTO> GetAllHitorialAsync(long CI) => await _context.HistoriaClinica
+            .Where(x => x.Activo && x.Mascota.IdMascota == CI).Select(x => new TratamientoDTO.HistoriaClinicDTO
             {
                 IdHistoriaClinica = x.IdHistoriaClinica,
                 CodigoHistorial = x.CodigoHistorial,
