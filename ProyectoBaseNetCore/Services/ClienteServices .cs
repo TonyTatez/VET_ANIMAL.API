@@ -35,7 +35,7 @@ namespace ProyectoBaseNetCore.Services
             {
                 IdMascota = x.IdMascota,
                 CODMascota = x.Codigo,
-                Nombre = x.NombreMascota,
+                NombreMascota = x.NombreMascota,
                 IdCliente = x.IdCliente,
                 Cliente = x.Cliente.Nombres,
                 Raza = x.Raza,

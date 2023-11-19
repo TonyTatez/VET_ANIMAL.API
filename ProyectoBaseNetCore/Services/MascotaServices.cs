@@ -27,7 +27,7 @@ namespace ProyectoBaseNetCore.Services
             {
                 IdHistoriaClinica = x.IdHistoriaClinica,
                 CodigoHistorial = x.CodigoHistorial,
-                Nombre = x.Mascota.NombreMascota,
+                NombreMascota = x.Mascota.NombreMascota,
                 Cedula = x.Mascota.Cliente.Identificacion,
                 Raza = x.Mascota.Raza,
                 FechaNacimiento = x.Mascota.FechaNacimiento,
@@ -43,7 +43,7 @@ namespace ProyectoBaseNetCore.Services
         public async Task<MascotaDTO> GetMascotaById(long IdMascota) => await _context.Mascota.Where(x => x.Activo && x.IdMascota == IdMascota).Select(x => new MascotaDTO
         {
             IdMascota = x.IdMascota,
-            Nombre = x.NombreMascota,
+            NombreMascota = x.NombreMascota,
             IdCliente = x.IdCliente,
             Cliente = x.Cliente.Nombres,
             Raza = x.Raza,
@@ -64,7 +64,7 @@ namespace ProyectoBaseNetCore.Services
 
                 // Búsqueda de Mascota Existente
                 var CurrentPet = await _context.Mascota
-                    .Where(x => x.Activo && x.NombreMascota == Data.Nombre && x.IdCliente == Data.IdCliente)
+                    .Where(x => x.Activo && x.NombreMascota == Data.NombreMascota && x.IdCliente == Data.IdCliente)
                     .FirstOrDefaultAsync();
 
                 // Verificación y excepción si la mascota ya existe
@@ -73,7 +73,7 @@ namespace ProyectoBaseNetCore.Services
 
                 // Creación de una Nueva Mascota
                 Mascota NewPet = new Mascota();
-                NewPet.NombreMascota = Data.Nombre;
+                NewPet.NombreMascota = Data.NombreMascota;
                 NewPet.Codigo = Data.CODMascota;
                 NewPet.IdCliente = Data.IdCliente;
                 NewPet.Raza = Data.Raza;
@@ -107,7 +107,7 @@ namespace ProyectoBaseNetCore.Services
                 var CurrentPet = await _context.Mascota.FindAsync(Data.IdMascota);
                 if (CurrentPet == null) throw new Exception("Mascota no encontrada!");
 
-                CurrentPet.NombreMascota = Data.Nombre;
+                CurrentPet.NombreMascota = Data.NombreMascota;
                 CurrentPet.Codigo = Data.CODMascota;
                 CurrentPet.IdCliente = Data.IdCliente;
                 CurrentPet.Raza = Data.Raza;

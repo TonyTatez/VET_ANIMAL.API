@@ -28,7 +28,7 @@ namespace ProyectoBaseNetCore.Services
             {
                 IdHistoriaClinica = x.IdHistoriaClinica,
                 CodigoHistorial = x.CodigoHistorial,
-                Nombre = x.Mascota.NombreMascota,
+                NombreMascota = x.Mascota.NombreMascota,
                 Cedula = x.Mascota.Cliente.Identificacion,
                 Raza = x.Mascota.Raza,
                 FechaNacimiento = x.Mascota.FechaNacimiento,
@@ -130,7 +130,7 @@ namespace ProyectoBaseNetCore.Services
         public async Task<bool> SaveFichaControlAsync(FichaControlDTO Ficha)
         {
 
-            if (Ficha.IdMotivo <= 0) throw new Exception("Debe registrar un motivo consulta!");
+            if (Ficha.Motivo == null) throw new Exception("Debe registrar un motivo consulta!");
             bool Exististorial = await _context.HistoriaClinica.Where(x=> x.IdHistoriaClinica== Ficha.IdHistoriaClinica).AnyAsync();
             if (!Exististorial) throw new Exception("Historia clinica no encntrada!");
             var codigo = await COD.GetOrCreateCodeAsync("FC");
@@ -152,7 +152,7 @@ namespace ProyectoBaseNetCore.Services
         }
         public async Task<bool> EditFichaControlAsync(FichaControlDTO Ficha)
         {
-            if (Ficha.IdMotivo <= 0) throw new Exception("Debe registrar un motivo consulta!");
+            if (Ficha.Motivo == null) throw new Exception("Debe registrar un motivo consulta!");
             var CurrentFicha = await  _context.FichaControl.FindAsync(Ficha.IdFichaControl);
             CurrentFicha.IdMotivo = Ficha.IdMotivo;
             CurrentFicha.Peso = Ficha.Peso;
