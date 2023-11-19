@@ -56,7 +56,7 @@ namespace ProyectoBaseNetCore
             Console.WriteLine($"ConnectionString: {connectionString}");
 
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"))
+                options.UseNpgsql(connectionString)
             );
 
             //Autenticacion
