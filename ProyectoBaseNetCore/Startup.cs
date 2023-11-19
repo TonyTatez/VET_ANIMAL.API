@@ -52,6 +52,8 @@ namespace ProyectoBaseNetCore
             {
                 loggingBuilder.AddSerilog(Log.Logger);
             });
+            var connectionString = Configuration.GetConnectionString("DefaultConnection");
+            Console.WriteLine($"ConnectionString: {connectionString}");
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"))
