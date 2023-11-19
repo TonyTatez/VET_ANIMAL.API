@@ -44,5 +44,23 @@ namespace ProyectoBaseNetCore.Utilities
                 return newCode.Codigo + "-" + DateTime.Now.Year.ToString() + "-" + (newCode.UltimoNumero).ToString(CantidadCeros);
             }
         }
+        public async Task<long> GetOrCreateMotivoAsync(string Motivo, bool D2 = false)
+        {
+            MotivoConsulta existingMotivo = await _context.MotivoConsulta.FirstOrDefaultAsync(c => c.Nombre == Motivo);
+            if (existingMotivo != null) return existingMotivo.IdMotivo;
+
+            MotivoConsulta newMotivo = new MotivoConsulta
+            {
+                Nombre = Motivo,
+                FechaRegistro = DateTime.Now,
+                UsuarioRegistro = _usuario,
+                IpRegistro = _ip,
+            };
+
+            await _context.MotivoConsulta.AddAsync(newMotivo);
+            await _context.SaveChangesAsync();
+
+            return newMotivo.IdMotivo;
+        }
     }
 }

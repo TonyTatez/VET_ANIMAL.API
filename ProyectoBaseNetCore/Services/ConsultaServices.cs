@@ -24,7 +24,7 @@ namespace ProyectoBaseNetCore.Services
             COD = new GeneratorCodeHelper(context, configuration, ip, usuario);
         }
         public async Task<TratamientoDTO.HistoriaClinicDTO> GetAllHitorialAsync(long idMascota) => await _context.HistoriaClinica
-            .Where(x => x.Activo && x.Mascota.IdMascota==idMascota).Select(x => new TratamientoDTO.HistoriaClinicDTO
+            .Where(x => x.Activo && x.Mascota.IdMascota == idMascota).Select(x => new TratamientoDTO.HistoriaClinicDTO
             {
                 IdHistoriaClinica = x.IdHistoriaClinica,
                 CodigoHistorial = x.CodigoHistorial,
@@ -38,17 +38,17 @@ namespace ProyectoBaseNetCore.Services
                 Peso = x.Mascota.Peso,
                 IdMascota = x.Mascota.IdMascota,
                 IdCliente = x.Mascota.Cliente.IdCliente,
-                FichasSintoma = x.FichasSintoma.Select(f=> new TratamientoDTO.FichaSintomaDTO
+                FichasSintoma = x.FichasSintoma.Select(f => new TratamientoDTO.FichaSintomaDTO
                 {
-                    
-                    IdFicha=f.IdFicha,
+
+                    IdFicha = f.IdFicha,
                     CodigoFicha = f.CodigoFicha,
                     Fecha = f.FechaRegistro,
-                    FichaDetalles = f.FichaDetalles.Select(fd=> new TratamientoDTO.FichaDetalleDTO
+                    FichaDetalles = f.FichaDetalles.Select(fd => new TratamientoDTO.FichaDetalleDTO
                     {
                         IdDetalle = fd.IdDetalle,
                         Sintoma = fd.Sintoma.Nombre,
-                        Observacion = fd.Observacion,   
+                        Observacion = fd.Observacion,
                     }).ToList(),
                 }).ToList(),
                 FichasControl = x.FichaControl.Select(fc => new FichaControlDTO
@@ -131,20 +131,23 @@ namespace ProyectoBaseNetCore.Services
         {
 
             if (Ficha.Motivo == null) throw new Exception("Debe registrar un motivo consulta!");
-            bool Exististorial = await _context.HistoriaClinica.Where(x=> x.IdHistoriaClinica== Ficha.IdHistoriaClinica).AnyAsync();
+            bool Exististorial = await _context.HistoriaClinica.Where(x => x.IdHistoriaClinica == Ficha.IdHistoriaClinica).AnyAsync();
             if (!Exististorial) throw new Exception("Historia clinica no encntrada!");
             var codigo = await COD.GetOrCreateCodeAsync("FC");
-            FichaControl NewFControl = new FichaControl();
-            NewFControl.CodigoFichaControl = codigo;
-            NewFControl.IdMotivo = Ficha.IdMotivo;
-            NewFControl.Peso = Ficha.Peso;
-            NewFControl.Observacion = Ficha.Observacion;
-            NewFControl.IdHistoriaClinica = Ficha.IdHistoriaClinica;
+            long IdMotivo = await COD.GetOrCreateMotivoAsync(Ficha.Motivo);
+            FichaControl NewFControl = new FichaControl
+            {
+                CodigoFichaControl = codigo,
+                IdMotivo = IdMotivo,
+                Peso = Ficha.Peso,
+                Observacion = Ficha.Observacion,
+                IdHistoriaClinica = Ficha.IdHistoriaClinica,
+                Activo = true,
+                FechaRegistro = DateTime.Now,
+                UsuarioRegistro = _usuario,
+                IpRegistro = _ip,
+            };
 
-            NewFControl.Activo = true;
-            NewFControl.FechaRegistro = DateTime.Now;
-            NewFControl.UsuarioRegistro = _usuario;
-            NewFControl.IpRegistro = _ip;
             await _context.FichaControl.AddAsync(NewFControl);
             await _context.SaveChangesAsync();
 
@@ -153,8 +156,9 @@ namespace ProyectoBaseNetCore.Services
         public async Task<bool> EditFichaControlAsync(FichaControlDTO Ficha)
         {
             if (Ficha.Motivo == null) throw new Exception("Debe registrar un motivo consulta!");
-            var CurrentFicha = await  _context.FichaControl.FindAsync(Ficha.IdFichaControl);
-            CurrentFicha.IdMotivo = Ficha.IdMotivo;
+            long IdMotivo = await COD.GetOrCreateMotivoAsync(Ficha.Motivo);
+            var CurrentFicha = await _context.FichaControl.FindAsync(Ficha.IdFichaControl);
+            CurrentFicha.IdMotivo = IdMotivo;
             CurrentFicha.Peso = Ficha.Peso;
             CurrentFicha.Observacion = Ficha.Observacion;
             CurrentFicha.Activo = true;
