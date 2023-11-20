@@ -54,7 +54,8 @@ namespace ProyectoBaseNetCore
             });
             var connectionString = "Host=monorail.proxy.rlwy.net;Port=19433;Database=railway;Username=postgres;Password=DFAfBBg61B-*2Ag-Fe*FBCEAGFbBaG*d;";
             Console.WriteLine($"ConnectionString: {connectionString}");
-
+            var url = Environment.GetEnvironmentVariable("DATABASE_URL");
+            Console.WriteLine($"ConnectionString2: {url}");
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseNpgsql(connectionString)
             );
