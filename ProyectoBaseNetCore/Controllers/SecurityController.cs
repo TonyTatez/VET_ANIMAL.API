@@ -152,7 +152,7 @@ namespace ProyectoBaseNetCore.Controllers
 
             claims.AddRange(claimsDB);
 
-            var llave = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWTKey"]));
+            var llave = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWTKey"]?? Environment.GetEnvironmentVariable("JWTKey")));
             var creds = new SigningCredentials(llave, SecurityAlgorithms.HmacSha256);
             var expiracion = DateTime.UtcNow.AddYears(1);
 
