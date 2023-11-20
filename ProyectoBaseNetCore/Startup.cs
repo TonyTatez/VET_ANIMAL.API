@@ -68,7 +68,7 @@ namespace ProyectoBaseNetCore
                     ValidateAudience = false,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWTKey"])),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWTKey"] ?? Environment.GetEnvironmentVariable("JWTKey"))),
                     ClockSkew = TimeSpan.Zero
                 });
 
