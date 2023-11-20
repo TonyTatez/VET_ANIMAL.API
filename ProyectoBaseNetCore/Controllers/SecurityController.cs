@@ -31,7 +31,7 @@ namespace ProyectoBaseNetCore.Controllers
                                  IDataProtectionProvider dataProtectionProvider,
                                  HashService hashService)
         {
-            JWTKey = configuration["JWTKey"];
+            JWTKey = configuration["JWTKey"] ?? Environment.GetEnvironmentVariable("JWTKey");
             this.userManager = userManager;
             this.configuration = configuration;
             this.signInManager = signInManager;
@@ -205,7 +205,7 @@ namespace ProyectoBaseNetCore.Controllers
                 return null;
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(configuration["llavejwt"]);
+            var key = Encoding.ASCII.GetBytes(configuration["llavejwt"] ?? Environment.GetEnvironmentVariable("JWTKey"));
             try
             {
                 tokenHandler.ValidateToken(token, new TokenValidationParameters
