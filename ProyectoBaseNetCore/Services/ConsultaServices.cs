@@ -43,7 +43,7 @@ namespace ProyectoBaseNetCore.Services
 
                     IdFicha = f.IdFicha,
                     CodigoFicha = f.CodigoFicha,
-                    Fecha = f.FechaRegistro,
+                    Fecha = f.FechaRegistro.UtcDateTime,
                     FichaDetalles = f.FichaDetalles.Select(fd => new TratamientoDTO.FichaDetalleDTO
                     {
                         IdDetalle = fd.IdDetalle,
@@ -54,7 +54,7 @@ namespace ProyectoBaseNetCore.Services
                 FichasControl = x.FichaControl.Select(fc => new FichaControlDTO
                 {
                     CodigoFichaControl = fc.CodigoFichaControl,
-                    Fecha = fc.FechaRegistro,
+                    Fecha = fc.FechaRegistro.UtcDateTime,
                     IdFichaControl = fc.IdFichaControl,
                     Peso = fc.Peso,
                     Motivo = fc.MotivoConsulta.Nombre,
@@ -84,7 +84,7 @@ namespace ProyectoBaseNetCore.Services
             NewHistory.IdMascotas = IdMascota;
 
             NewHistory.Activo = true;
-            NewHistory.FechaRegistro = DateTime.Now;
+            NewHistory.FechaRegistro = DateTime.UtcNow;
             NewHistory.UsuarioRegistro = _usuario;
             NewHistory.IpRegistro = _ip;
             await _context.HistoriaClinica.AddAsync(NewHistory);
@@ -100,7 +100,7 @@ namespace ProyectoBaseNetCore.Services
                 if (ClienteEncontrada != null)
                 {
                     ClienteEncontrada.Activo = false;
-                    ClienteEncontrada.FechaEliminacion = DateTime.Now;
+                    ClienteEncontrada.FechaEliminacion = DateTime.UtcNow;
                     ClienteEncontrada.UsuarioEliminacion = _usuario;
                     ClienteEncontrada.IpEliminacion = _ip;
                     await _context.SaveChangesAsync();
@@ -121,7 +121,7 @@ namespace ProyectoBaseNetCore.Services
            .Where(x => x.Activo).Select(x => new FichaControlDTO
            {
                IdFichaControl = x.IdFichaControl,
-               Fecha = x.FechaRegistro,
+               Fecha = x.FechaRegistro.UtcDateTime,
                CodigoFichaControl = x.CodigoFichaControl,
                Peso = x.Peso,
                Motivo = x.MotivoConsulta.Nombre,
@@ -143,7 +143,7 @@ namespace ProyectoBaseNetCore.Services
                 Observacion = Ficha.Observacion,
                 IdHistoriaClinica = Ficha.IdHistoriaClinica,
                 Activo = true,
-                FechaRegistro = DateTime.Now,
+                FechaRegistro = DateTime.UtcNow,
                 UsuarioRegistro = _usuario,
                 IpRegistro = _ip,
             };
@@ -161,7 +161,7 @@ namespace ProyectoBaseNetCore.Services
             CurrentFicha.Peso = Ficha.Peso;
             CurrentFicha.Observacion = Ficha.Observacion;
             CurrentFicha.Activo = true;
-            CurrentFicha.FechaModificacion = DateTime.Now;
+            CurrentFicha.FechaModificacion = DateTime.UtcNow;
             CurrentFicha.UsuarioModificacion = _usuario;
             CurrentFicha.IpModificacion = _ip;
             await _context.SaveChangesAsync();

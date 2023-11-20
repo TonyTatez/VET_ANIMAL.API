@@ -25,7 +25,7 @@ namespace ProyectoBaseNetCore.Utilities
             {
                 existingCode.UltimoNumero = existingCode.UltimoNumero + 1;
                 await _context.SaveChangesAsync();
-                return existingCode.Codigo + "-" + DateTime.Now.Year.ToString() + "-" + (existingCode.UltimoNumero).ToString(CantidadCeros);
+                return existingCode.Codigo + "-" + DateTime.UtcNow.Year.ToString() + "-" + (existingCode.UltimoNumero).ToString(CantidadCeros);
             }
             else
             {
@@ -33,7 +33,7 @@ namespace ProyectoBaseNetCore.Utilities
                 {
                     Codigo = code,
                     UltimoNumero= 1,
-                    FechaRegistro= DateTime.Now,
+                    FechaRegistro= DateTime.UtcNow,
                     UsuarioRegistro= _usuario,
                     IpRegistro= _ip,
                 };
@@ -41,7 +41,7 @@ namespace ProyectoBaseNetCore.Utilities
                 await _context.CodigosSecuencia.AddAsync(newCode);
                 await _context.SaveChangesAsync();
 
-                return newCode.Codigo + "-" + DateTime.Now.Year.ToString() + "-" + (newCode.UltimoNumero).ToString(CantidadCeros);
+                return newCode.Codigo + "-" + DateTime.UtcNow.Year.ToString() + "-" + (newCode.UltimoNumero).ToString(CantidadCeros);
             }
         }
         public async Task<long> GetOrCreateMotivoAsync(string Motivo, bool D2 = false)
@@ -52,7 +52,7 @@ namespace ProyectoBaseNetCore.Utilities
             MotivoConsulta newMotivo = new MotivoConsulta
             {
                 Nombre = Motivo,
-                FechaRegistro = DateTime.Now,
+                FechaRegistro = DateTime.UtcNow,
                 UsuarioRegistro = _usuario,
                 IpRegistro = _ip,
             };

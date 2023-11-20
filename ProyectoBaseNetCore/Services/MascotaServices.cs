@@ -81,7 +81,7 @@ namespace ProyectoBaseNetCore.Services
                 NewPet.FechaNacimiento = Data.FechaNacimiento;
                 NewPet.Sexo = Data.Sexo;
                 NewPet.Activo = true;
-                NewPet.FechaRegistro = DateTime.Now;
+                NewPet.FechaRegistro = DateTime.UtcNow;
                 NewPet.UsuarioRegistro = _usuario;
                 NewPet.IpRegistro = _ip;
 
@@ -115,7 +115,7 @@ namespace ProyectoBaseNetCore.Services
                 CurrentPet.FechaNacimiento = Data.FechaNacimiento;
                 CurrentPet.Sexo = Data.Sexo;
                 CurrentPet.Activo = true;
-                CurrentPet.FechaModificacion = DateTime.Now;
+                CurrentPet.FechaModificacion = DateTime.UtcNow;
                 CurrentPet.UsuarioModificacion = _usuario;
                 CurrentPet.IpModificacion = _ip;
                 _context.SaveChanges();
@@ -151,7 +151,7 @@ namespace ProyectoBaseNetCore.Services
                 if (CurrentPet != null)
                 {
                     CurrentPet.Activo = false;
-                    CurrentPet.FechaEliminacion = DateTime.Now;
+                    CurrentPet.FechaEliminacion = DateTime.UtcNow;
                     CurrentPet.UsuarioEliminacion = _usuario;
                     CurrentPet.IpEliminacion = _ip;
                     await _context.SaveChangesAsync();
