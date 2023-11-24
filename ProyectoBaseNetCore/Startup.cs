@@ -18,6 +18,9 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
+using Npgsql;
+using Microsoft.Extensions.Options;
+using VET_ANIMAL_API.Filters;
 
 [assembly: ApiConventionType(typeof(DefaultApiConventions))]
 
@@ -40,6 +43,7 @@ namespace ProyectoBaseNetCore
             {
                 //Log para captar todos los exeptions no capturados
                 opciones.Filters.Add(typeof(ExceptionFilter));
+                opciones.Filters.Add(new ConvertDatesFilter());
             }).AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles).AddNewtonsoftJson();
             //QRCode
             services.AddTransient<QRCodeService>();

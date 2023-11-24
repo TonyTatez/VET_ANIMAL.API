@@ -123,7 +123,7 @@ namespace ProyectoBaseNetCore.Services
                                     Activo = true,
                                     UsuarioRegistro = _usuario,
                                     IpRegistro = _ip,
-                                    FechaRegistro = DateTime.Now,
+                                    FechaRegistro = DateTime.UtcNow,
                                     Mascotas = new List<Mascota> {
                                         new Mascota
                                         {
@@ -136,7 +136,7 @@ namespace ProyectoBaseNetCore.Services
                                             Activo = true,
                                             UsuarioRegistro = _usuario,
                                             IpRegistro = _ip,
-                                            FechaRegistro = DateTime.Now,
+                                            FechaRegistro = DateTime.UtcNow,
                                         }
                                     }
                                 };
@@ -152,7 +152,7 @@ namespace ProyectoBaseNetCore.Services
                                 Cliente.Activo = true;
                                 Cliente.UsuarioModificacion = _usuario;
                                 Cliente.IpModificacion = _ip;
-                                Cliente.FechaModificacion = DateTime.Now;
+                                Cliente.FechaModificacion = DateTime.UtcNow;
                                 var FMascota = await _context.Mascota.Where(m => m.IdCliente == Cliente.IdCliente).FirstOrDefaultAsync();
                                 if (FMascota == null)
                                 {
@@ -169,7 +169,7 @@ namespace ProyectoBaseNetCore.Services
                                         Activo = true,
                                         UsuarioRegistro = _usuario,
                                         IpRegistro = _ip,
-                                        FechaRegistro = DateTime.Now,
+                                        FechaRegistro = DateTime.UtcNow,
                                     };
                                     await _context.Mascota.AddAsync(NMascota);
 
@@ -183,7 +183,7 @@ namespace ProyectoBaseNetCore.Services
                                     FMascota.Activo = true;
                                     FMascota.UsuarioModificacion = _usuario;
                                     FMascota.IpModificacion = _ip;
-                                    FMascota.FechaModificacion = DateTime.Now;
+                                    FMascota.FechaModificacion = DateTime.UtcNow;
                                 }
 
                             }

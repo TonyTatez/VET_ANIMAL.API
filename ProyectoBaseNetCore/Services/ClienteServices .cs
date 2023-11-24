@@ -98,7 +98,7 @@ namespace ProyectoBaseNetCore.Services
                 NewCliente.Correo = Cliente.correo;
                 NewCliente.Telefono = Cliente.telefono;
                 NewCliente.Activo = true;
-                NewCliente.FechaRegistro = DateTime.Now;
+                NewCliente.FechaRegistro = DateTime.UtcNow;
                 NewCliente.UsuarioRegistro = _usuario;
                 NewCliente.IpRegistro = _ip;
                 await _context.Cliente.AddAsync(NewCliente);
@@ -111,7 +111,7 @@ namespace ProyectoBaseNetCore.Services
                 ClienteEncontrada.Direccion = Cliente.direccion;
                 ClienteEncontrada.Correo = Cliente.correo;
                 ClienteEncontrada.Telefono = Cliente.telefono;
-                ClienteEncontrada.FechaModificacion = DateTime.Now;
+                ClienteEncontrada.FechaModificacion = DateTime.UtcNow;
                 ClienteEncontrada.UsuarioModificacion = _usuario;
                 ClienteEncontrada.IpModificacion = _ip;
                 await _context.SaveChangesAsync();
@@ -132,7 +132,7 @@ namespace ProyectoBaseNetCore.Services
                 ClienteEncontrado.Direccion = Cliente.direccion;
                 ClienteEncontrado.Correo = Cliente.correo;
                 ClienteEncontrado.Telefono = Cliente.telefono;
-                ClienteEncontrado.FechaModificacion = DateTime.Now;
+                ClienteEncontrado.FechaModificacion = DateTime.UtcNow;
                 ClienteEncontrado.UsuarioModificacion = _usuario;
                 ClienteEncontrado.IpModificacion = _ip;
 
@@ -172,7 +172,7 @@ namespace ProyectoBaseNetCore.Services
                 if (ClienteEncontrada != null)
                 {
                     ClienteEncontrada.Activo = false;
-                    ClienteEncontrada.FechaEliminacion = DateTime.Now;
+                    ClienteEncontrada.FechaEliminacion = DateTime.UtcNow;
                     ClienteEncontrada.UsuarioEliminacion = _usuario;
                     ClienteEncontrada.IpEliminacion = _ip;
                     await _context.SaveChangesAsync();

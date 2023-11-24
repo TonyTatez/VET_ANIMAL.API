@@ -5,7 +5,7 @@ namespace ProyectoBaseNetCore.Entities
     public class CrudEntities
     {
         public bool Activo { get; set; } = true;
-        public DateTime FechaRegistro { get; set; }
+        public DateTimeOffset FechaRegistro { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public DateTime? FechaEliminacion { get; set; }
         [MaxLength(350)]
