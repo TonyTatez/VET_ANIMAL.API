@@ -15,7 +15,7 @@ namespace ProyectoBaseNetCore.Entities
         public string Correo { get; set; }
         [MaxLength(350)]
         public string Direccion { get; set; }
-        public virtual ICollection<Mascota> Mascotas { get; set; }
+        public virtual ICollection<Mascota> Mascotas { get; set; }= new List<Mascota>();
     }
 }
     

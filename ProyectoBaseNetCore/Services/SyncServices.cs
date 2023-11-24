@@ -72,6 +72,7 @@ namespace ProyectoBaseNetCore.Services
                         float Peso = float.Parse(excelRow.GetCell(7)?.ToString()??"0");
                         string Sexo = excelRow.GetCell(8)?.ToString();
                         DateTime? FNac = excelRow.GetCell(9)?.ToString() != null ? DateTime.Parse(excelRow.GetCell(9)?.ToString()) :null;
+                        FNac = FNac.HasValue ? FNac.Value.ToUniversalTime() : (DateTime?)null;
 
                         // Realizar validaciones y procesamiento de datos de acuerdo a tus requisitos
                         if (string.IsNullOrEmpty(Cedula) || Cedula.Length < 10)
@@ -107,40 +108,43 @@ namespace ProyectoBaseNetCore.Services
                         }
                         if (!hasError)
                         {
-                            var Cliente = await _context.Cliente.Where(c => c.Identificacion.Equals(Cedula)).FirstOrDefaultAsync();
+                            var maskota = new Mascota();
+                            var nuevo = new Cliente();
+                            var NMascota = new Mascota();
+                            var Cliente = await _context.Cliente.Include(c => c.Mascotas).Where(c => c.Identificacion.Equals(Cedula)).FirstOrDefaultAsync();
                             if (Cliente == null)
                             {
                                 var codigocLIENTE = await COD.GetOrCreateCodeAsync("CL",true);
                                 var codigocMascota = await COD.GetOrCreateCodeAsync("MC",true);
-                                var nuevo = new Cliente
-                                {
-                                    Identificacion = Cedula,
-                                    Codigo = codigocLIENTE,
-                                    Nombres = Nombres,
-                                    Correo = Correo,
-                                    Direccion = Direccion,
-                                    Telefono = Celular,
-                                    Activo = true,
-                                    UsuarioRegistro = _usuario,
-                                    IpRegistro = _ip,
-                                    FechaRegistro = DateTime.UtcNow,
-                                    Mascotas = new List<Mascota> {
-                                        new Mascota
-                                        {
-                                            Codigo = codigocMascota,
-                                            NombreMascota = NombreM,
-                                            Raza= Raza,
-                                            Sexo = Sexo,
-                                            FechaNacimiento = FNac,
-                                            Peso = Peso,
-                                            Activo = true,
-                                            UsuarioRegistro = _usuario,
-                                            IpRegistro = _ip,
-                                            FechaRegistro = DateTime.UtcNow,
-                                        }
+                                
+                                nuevo.Identificacion = Cedula;
+                                nuevo.Codigo = codigocLIENTE;
+                                nuevo.Nombres = Nombres;
+                                nuevo.Correo = Correo;
+                                nuevo.Direccion = Direccion;
+                                nuevo.Telefono = Celular;
+                                nuevo.Activo = true;
+                                nuevo.UsuarioRegistro = _usuario;
+                                nuevo.IpRegistro = _ip;
+                                nuevo.FechaRegistro = DateTime.UtcNow;
+                                nuevo.Mascotas = new List<Mascota> {
+                                    new Mascota
+                                    {
+                                        Codigo = codigocMascota,
+                                        NombreMascota = NombreM,
+                                        Raza= Raza,
+                                        Sexo = Sexo,
+                                        FechaNacimiento = FNac,
+                                        Peso = Peso,
+                                        Activo = true,
+                                        UsuarioRegistro = _usuario,
+                                        IpRegistro = _ip,
+                                        FechaRegistro = DateTime.UtcNow,
                                     }
                                 };
+                                
                                 await _context.Cliente.AddAsync(nuevo);
+                                maskota.IdMascota = nuevo.Mascotas.FirstOrDefault().IdMascota;    
                             }
                             else
                             {
@@ -157,23 +161,23 @@ namespace ProyectoBaseNetCore.Services
                                 if (FMascota == null)
                                 {
                                     var codigocMascota = await COD.GetOrCreateCodeAsync("MC", true);
-                                    var NMascota = new Mascota
-                                    {
-                                        IdCliente = Cliente.IdCliente,
-                                        Codigo = codigocMascota,
-                                        NombreMascota = NombreM,
-                                        Raza = Raza,
-                                        Sexo = Sexo,
-                                        FechaNacimiento = FNac,
-                                        Peso = Peso,
-                                        Activo = true,
-                                        UsuarioRegistro = _usuario,
-                                        IpRegistro = _ip,
-                                        FechaRegistro = DateTime.UtcNow,
-                                    };
+                                    
+                                    NMascota.IdCliente = Cliente.IdCliente;
+                                    NMascota.Codigo = codigocMascota;
+                                    NMascota.NombreMascota = NombreM;
+                                    NMascota.Raza = Raza;
+                                    NMascota.Sexo = Sexo;
+                                    NMascota.FechaNacimiento = FNac;
+                                    NMascota.Peso = Peso;
+                                    NMascota.Activo = true;
+                                    NMascota.UsuarioRegistro = _usuario;
+                                    NMascota.IpRegistro = _ip;
+                                    NMascota.FechaRegistro = DateTime.UtcNow;
+                                    
                                     await _context.Mascota.AddAsync(NMascota);
 
-                                }else
+                                }
+                                else
                                 {
                                     FMascota.NombreMascota = NombreM;
                                     FMascota.Raza = Raza;
@@ -188,6 +192,8 @@ namespace ProyectoBaseNetCore.Services
 
                             }
                             await _context.SaveChangesAsync();
+                            long? IdMascota = NMascota?.IdMascota > 0 ? NMascota?.IdMascota : nuevo?.Mascotas?.FirstOrDefault()?.IdMascota;
+                            if(IdMascota is not  null) await _consultaService.SaveHistorial(IdMascota.Value);
                         }
                     }
                     else
