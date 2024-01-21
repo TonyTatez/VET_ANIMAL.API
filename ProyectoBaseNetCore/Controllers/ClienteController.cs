@@ -45,6 +45,9 @@ namespace ProyectoBaseNetCore.Controllers
 
         [HttpGet("Cliente")]
         public async Task<IActionResult> GetCliente([FromQuery] string CI) => Ok(await _service.GetClientByCI(CI));
+        [HttpGet("ClienteCorreo")]
+        public async Task<IActionResult> GetCliente2([FromQuery] string Email) => Ok(await _service.GetClientByC(Email));
+
         [HttpPut("Cliente")]
         public async Task<IActionResult> GetCliente(ClienteDTO Cliente) => Ok(await _service.EditCliente(Cliente));
 

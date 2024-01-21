@@ -53,6 +53,9 @@ namespace ProyectoBaseNetCore.Controllers
         [HttpGet("FichasControl")]
         public async Task<IActionResult> GetAllFichasControl () => Ok(await _service.GetAllfichasControlAsync());
 
+        [HttpGet("FichasControlSospecha")]
+        public async Task<IActionResult> GetFichasControlConSospechaHemoAsync() => Ok(await _service.GetFichasControlConSospechaHemoAsync());
+
         /// <summary>
         /// Crer ficha de control
         /// </summary>

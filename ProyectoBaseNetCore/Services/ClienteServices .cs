@@ -54,6 +54,9 @@ namespace ProyectoBaseNetCore.Services
                 telefono = x.Telefono,
                 correo= x.Correo,
             }).FirstOrDefaultAsync();
+
+
+       
         static bool ValidarCedulaEcuatoriana(string cedula)
         {
             if (cedula.Length != 10)
@@ -85,6 +88,18 @@ namespace ProyectoBaseNetCore.Services
 
             return digitoValidador == ultimoDigito;
         }
+
+        public async Task<ClienteDTO> GetClientByC(string Email) => await _context.Cliente
+           .Where(x => x.Activo && x.Correo == Email).Select(x => new ClienteDTO
+           {
+               idCliente = x.IdCliente,
+               identificacion = x.Identificacion,
+               nombres = x.Nombres,
+               codigo = x.Codigo,
+               direccion = x.Direccion,
+               telefono = x.Telefono,
+               correo = x.Correo,
+           }).FirstOrDefaultAsync();
         public async Task<bool> SaveCliente(GuardarClienteViewModel Cliente)
         {
             ValidarCedulaEcuatoriana(Cliente.identificacion);

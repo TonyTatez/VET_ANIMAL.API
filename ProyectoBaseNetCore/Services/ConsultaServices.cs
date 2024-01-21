@@ -117,6 +117,43 @@ namespace ProyectoBaseNetCore.Services
             }
         }
 
+        public async Task<List<FichaControlDTO>> GetFichasControlConSospechaHemoAsync()
+        {
+            var fichasControl = await _context.FichaControl
+                .Include(fc => fc.HistoriaClinica)
+                    .ThenInclude(hc => hc.Mascota)
+                .Include(fc => fc.MotivoConsulta)
+                .Where(fc => fc.Observacion.Contains("SOSPECHA HEMO"))
+                .Select(fc => new FichaControlDTO
+                {
+                    CodigoFichaControl = fc.CodigoFichaControl,
+                    //Fecha = fc.FechaRegistro,
+                    IdFichaControl = fc.IdFichaControl,
+                    IdHistoriaClinica = fc.IdHistoriaClinica,
+                    Peso = fc.Peso,
+                    Motivo = fc.MotivoConsulta.Nombre,
+                    Observacion = fc.Observacion,
+                    NombreMascota = fc.HistoriaClinica.Mascota.NombreMascota,
+                    Raza = fc.HistoriaClinica.Mascota.Raza,
+                    Sexo = fc.HistoriaClinica.Mascota.Sexo,
+                })
+                .ToListAsync();
+
+            return fichasControl;
+        }
+        //public async Task<List<FichaControlDTO>> GetFichasControlConSospechaHemoAsync() =>
+        //await _context.FichaControl
+        //    .Where(x => x.Activo && x.Observacion.Contains("SOSPECHA HEMO"))
+        //    .Select(x => new FichaControlDTO
+        //    {
+        //        IdFichaControl = x.IdFichaControl,
+        //        Fecha = x.FechaRegistro,
+        //        CodigoFichaControl = x.CodigoFichaControl,
+        //        Peso = x.Peso,
+        //        Motivo = x.MotivoConsulta.Nombre,
+        //        Observacion = x.Observacion,
+        //    })
+        //    .ToListAsync();
         public async Task<List<FichaControlDTO>> GetAllfichasControlAsync() => await _context.FichaControl
            .Where(x => x.Activo).Select(x => new FichaControlDTO
            {

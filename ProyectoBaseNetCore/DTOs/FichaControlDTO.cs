@@ -10,5 +10,8 @@
         public string Motivo { get; set; }
         public float Peso { get; set; }
         public string Observacion { get; set; }
+        public string NombreMascota { get; set; }
+        public string Raza { get; set; }
+        public string Sexo { get; set; }
     }
 }
